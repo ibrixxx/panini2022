@@ -1,11 +1,31 @@
-import {Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useState} from "react";
 
-export default function Card() {
+export default function Card({tag, number, amount}) {
+    const [color, setColor] = useState('firebrick')
+
+    const onPress = () => {
+        if(color === 'firebrick')
+            setColor('#269900')
+        else
+            setColor('firebrick')
+    }
+
+    if(number === 20)
+        return (
+            <View style={[styles.container, {opacity: 0}]}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={styles.tag}>{tag}</Text>
+                    <Text style={styles.number}>{number}</Text>
+                </View>
+                <Text style={styles.number2}>0</Text>
+            </View>
+        )
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={[styles.container, {backgroundColor: color}]}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.tag}>FRA</Text>
-                <Text style={styles.number}>14</Text>
+                <Text style={styles.tag}>{tag}</Text>
+                <Text style={styles.number}>{number}</Text>
             </View>
             <Text style={styles.number2}>0</Text>
         </TouchableOpacity>
@@ -15,7 +35,6 @@ export default function Card() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'firebrick',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 7,
@@ -27,7 +46,7 @@ const styles = StyleSheet.create({
     number: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 9
+        fontSize: 11
     },
     number2: {
         color: 'white',
