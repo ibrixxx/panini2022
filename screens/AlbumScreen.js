@@ -1,11 +1,9 @@
 import {FlatList, ImageBackground, StyleSheet, View} from 'react-native';
 import Team from "../components/Team";
-import {useState} from "react";
 import {CardData} from "../data/CardData";
 import {verticalScale} from 'react-native-size-matters'
 
 export default function AlbumScreen() {
-    const [teams, setTeams] = useState([])
 
     return (
         <View style={styles.container}>

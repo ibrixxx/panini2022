@@ -1,10 +1,72 @@
+import {memo, useState} from "react";
 import {StyleSheet, Text, View} from 'react-native';
 import ExpoCheckbox from "expo-checkbox";
 import Card from "./Card";
 import {scale} from 'react-native-size-matters'
-import {CardNumbers} from "../data/CardData";
+import {CardNumbers, FWCardNumbers} from "../data/CardData";
+import {useCards, useUpdateCards} from "../context/Context";
 
-export default function Team({team}) {
+function Team({team}) {
+    const cards = useCards()
+    const updateCards = useUpdateCards()
+    const [checked, setChecked] = useState(() => {
+        const limit = team.tag === 'FWC'? 30:19
+        for(let i = 1; i <= limit; i++) {
+            if(!cards[team.tag].get(team.tag+i))
+                return false
+        }
+        return true
+    })
+
+    const onCheck = val => {
+        if(val) {
+            const limit = team.tag === 'FWC'? 30:19
+            let temp = cards
+            for(let i = 1; i <= limit; i++) {
+                const amount = temp[team.tag].get(team.tag+i)
+                temp[team.tag].set(team.tag+i, amount + 1)
+                updateCards(temp)
+            }
+        }
+        else {
+            const limit = team.tag === 'FWC'? 30:19
+            let temp = cards
+            for(let i = 1; i <= limit; i++) {
+                const amount = temp[team.tag].get(team.tag+i)
+                temp[team.tag].set(team.tag+i, amount - 1)
+            }
+        }
+        setChecked(val)
+    }
+
+    if(team.tag === 'FWC')
+        return (
+            <View style={styles.container}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={styles.flag}>{team.flag}</Text>
+                        <Text style={styles.name}>{team.name}</Text>
+                    </View>
+                    <ExpoCheckbox
+                        value={checked}
+                        color={checked ? '#4630EB' : undefined}
+                        onValueChange={value => onCheck(value)}
+                        style={{marginHorizontal: scale(10), borderColor: 'black', backgroundColor: 'whitesmoke'}}
+                    />
+                </View>
+                {
+                    FWCardNumbers.map((row, index) => {
+                            return (
+                                <View key={index} style={{flexDirection: 'row'}}>
+                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item}/>)}
+                                </View>
+                            )
+                        }
+                    )
+                }
+            </View>
+        )
+
     return (
         <View style={styles.container}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -13,8 +75,9 @@ export default function Team({team}) {
                     <Text style={styles.name}>{team.name}</Text>
                 </View>
                 <ExpoCheckbox
-                    value={false}
-                    color={false ? '#4630EB' : undefined}
+                    value={checked}
+                    color={checked ? '#4630EB' : undefined}
+                    onValueChange={value => onCheck(value)}
                     style={{marginHorizontal: scale(10), borderColor: 'black', backgroundColor: 'whitesmoke'}}
                 />
             </View>
@@ -24,13 +87,14 @@ export default function Team({team}) {
                         <View key={index} style={{flexDirection: 'row'}}>
                             {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item}/>)}
                         </View>
-                        )
-                    }
-                )
+                    )
+                })
             }
         </View>
     );
 }
+
+export default memo(Team)
 
 const styles = StyleSheet.create({
     container: {

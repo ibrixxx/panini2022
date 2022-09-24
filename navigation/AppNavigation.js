@@ -1,6 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AlbumScreen from "../screens/AlbumScreen";
 import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
+import MapScreen from "../screens/MapScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +26,7 @@ const AppNavigation = () => {
             />
             <Tab.Screen
                 name="Map"
-                component={AlbumScreen}
+                component={MapScreen}
                 options={{
                     tabBarLabel: () => null,
                     tabBarIcon: ({color}) => <MaterialCommunityIcons name="map-search-outline" size={24} color={color} />
@@ -32,7 +34,7 @@ const AppNavigation = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={AlbumScreen}
+                component={ProfileScreen}
                 options={{
                     tabBarLabel: () => null,
                     tabBarIcon: ({color}) => <FontAwesome5 name="user-circle" size={24} color={color} />
