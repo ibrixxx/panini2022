@@ -1,19 +1,37 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useState} from "react";
-import {useCards} from "../context/Context";
+import {useState, memo} from "react";
+import {useRecoilValue} from "recoil";
+import {myCards} from "../atoms/MyCards";
 
-function Card({tag, number}) {
-    const cards = useCards()
+function Card({tag, number, setChecked, setAlbumCards}) {
+    const cards = useRecoilValue(myCards)
     const [color, setColor] = useState(cards[tag].get(tag+number)? '#269900':'firebrick')
     const [borderColor, setBorderColor] = useState(cards[tag].get(tag+number) > 1? 'dodgerblue':'black')
 
+    const getColor = () => {
+        return cards[tag].get(tag+number)? '#269900':'firebrick'
+    }
+
+    const isCompleted = () => {
+        const limit = tag === 'FWC'? 30:19
+        for(let i = 1; i <= limit; i++) {
+            if(!cards[tag].get(tag+i))
+                return false
+        }
+        return true
+    }
+
     const onPress = () => {
         const amount = cards[tag].get(tag+number)
-        if(!amount)
+        if(!amount) {
             setColor('#269900')
+            setAlbumCards(prev => prev + 1)
+        }
         else
             setBorderColor('dodgerblue')
         cards[tag].set(tag+number, amount + 1)
+        if(isCompleted())
+            setChecked(true)
     }
 
     const onLongPress = () => {
@@ -23,9 +41,13 @@ function Card({tag, number}) {
         cards[tag].set(tag+number, amount - 1)
         if(amount - 1 <= 1) {
             setBorderColor('black')
-            if (amount - 1 === 0)
+            if (amount - 1 === 0) {
                 setColor('firebrick')
+                setAlbumCards(prev => prev - 1)
+            }
         }
+        if(!isCompleted())
+            setChecked(false)
     }
 
     if(number === 20 && tag !== 'FWC')
@@ -40,7 +62,7 @@ function Card({tag, number}) {
         )
 
     return (
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: color, borderColor: borderColor}]}>
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: getColor(), borderColor: borderColor}]}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.tag}>{tag}</Text>
                 <Text style={styles.number}>{number === 30? '00' : number}</Text>
@@ -50,7 +72,7 @@ function Card({tag, number}) {
     );
 }
 
-export default Card
+export default memo(Card)
 
 const styles = StyleSheet.create({
     container: {

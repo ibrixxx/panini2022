@@ -4,11 +4,12 @@ import ExpoCheckbox from "expo-checkbox";
 import Card from "./Card";
 import {scale} from 'react-native-size-matters'
 import {CardNumbers, FWCardNumbers} from "../data/CardData";
-import {useCards, useUpdateCards} from "../context/Context";
+import {useRecoilState} from "recoil";
+import {myCards} from "../atoms/MyCards";
 
-function Team({team}) {
-    const cards = useCards()
-    const updateCards = useUpdateCards()
+
+function Team({team, setAlbumCards}) {
+    const [cards, setCards] = useRecoilState(myCards)
     const [checked, setChecked] = useState(() => {
         const limit = team.tag === 'FWC'? 30:19
         for(let i = 1; i <= limit; i++) {
@@ -24,8 +25,9 @@ function Team({team}) {
             let temp = cards
             for(let i = 1; i <= limit; i++) {
                 const amount = temp[team.tag].get(team.tag+i)
-                temp[team.tag].set(team.tag+i, amount + 1)
-                updateCards(temp)
+                if(amount === 0)
+                    temp[team.tag].set(team.tag+i, amount + 1)
+                setCards(temp)
             }
         }
         else {
@@ -34,6 +36,7 @@ function Team({team}) {
             for(let i = 1; i <= limit; i++) {
                 const amount = temp[team.tag].get(team.tag+i)
                 temp[team.tag].set(team.tag+i, amount - 1)
+                setCards(temp)
             }
         }
         setChecked(val)
@@ -58,7 +61,7 @@ function Team({team}) {
                     FWCardNumbers.map((row, index) => {
                             return (
                                 <View key={index} style={{flexDirection: 'row'}}>
-                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item}/>)}
+                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setAlbumCards={setAlbumCards}/>)}
                                 </View>
                             )
                         }
@@ -85,7 +88,7 @@ function Team({team}) {
                 CardNumbers.map((row, index) => {
                     return (
                         <View key={index} style={{flexDirection: 'row'}}>
-                            {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item}/>)}
+                            {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setAlbumCards={setAlbumCards}/>)}
                         </View>
                     )
                 })
