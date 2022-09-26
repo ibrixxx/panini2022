@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         height: verticalScale(40),
         backgroundColor: 'rgba(52, 52, 52, 0.25)',
         borderRadius: 7,
-        borderColor: 'black',
+        borderColor: 'gray',
         borderWidth: 1,
         marginHorizontal: scale(5)
     }
