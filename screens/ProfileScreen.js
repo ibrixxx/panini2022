@@ -7,9 +7,11 @@ import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 import {useFocusEffect} from "@react-navigation/native";
 import {AllCards} from "../data/CardData";
+import {useUser} from "../context/Context";
 
 export default function ProfileScreen() {
     const cards = useRecoilValue(myCards)
+    const user = useUser()
     const [myAlbumCards, setMyCards] = useState(0)
     const [duplicates, setDuplicates] = useState(0)
 
@@ -49,15 +51,15 @@ export default function ProfileScreen() {
             <ImageBackground source={{uri: 'https://www.unotv.com/uploads/2022/07/fondo-02-175001.jpg'}} resizeMode="cover" style={styles.image}>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Ionicons name="person-outline" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>Makelele</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.displayName}</Text>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Feather name="phone" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>+38761250344</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.phoneNumber}</Text>
                 </View>
                 <Pressable style={styles.location}>
                     <MaterialIcons name="location-on" size={24} color="white" />
-                    <Text style={{color: 'white', fontSize: 14}}>Sarajevo, Bosnia and Herzegovina</Text>
+                    <Text style={{color: 'white', fontSize: 14}}>{JSON.parse(user.photoURL).lat + ' ' + JSON.parse(user.photoURL).lng}</Text>
                 </Pressable>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(52, 52, 52, 0.5)', padding: scale(20), borderRadius: 6}}>
                     <View style={{marginRight: scale(10), alignItems: 'center'}}>

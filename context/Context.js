@@ -1,26 +1,26 @@
 import React, {useContext, useState} from "react";
-import {CardData, CardNumbers, FWCardNumbers} from "../data/CardData";
 
-const CardsContext = React.createContext()
-const CardsUpdateContext = React.createContext()
+const UserContext = React.createContext()
+const UserUpdateContext = React.createContext()
 
-export const useCards = () => {
-    return useContext(CardsContext)
+export const useUser = () => {
+    return useContext(UserContext)
 }
 
-export const useUpdateCards = () => {
-    return useContext(CardsUpdateContext)
+export const useUserUpdate = () => {
+    return useContext(UserUpdateContext)
 }
 
 const Context = ({children}) => {
-    const [cards, setCards] = useState([])
+    const [user, setUser] = useState(null)
+
 
     return (
-        <CardsContext.Provider value={cards}>
-            <CardsUpdateContext.Provider value={setCards}>
+        <UserContext.Provider value={user}>
+            <UserUpdateContext.Provider value={setUser}>
                 {children}
-            </CardsUpdateContext.Provider>
-        </CardsContext.Provider>
+            </UserUpdateContext.Provider>
+        </UserContext.Provider>
     );
 }
 

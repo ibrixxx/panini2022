@@ -9,24 +9,16 @@ function AuthStack() {
         <Stack.Navigator
             initialRouteName="AuthScreen"
             screenOptions={{
-                headerMode: 'screen',
-                headerTintColor: 'white',
-                headerStyle: { backgroundColor: 'tomato' },
+                headerShown: false
             }}
         >
             <Stack.Screen
                 name="AuthScreen"
                 component={AuthScreen}
-                options={{
-                    title: 'Registration',
-                }}
             />
             <Stack.Screen
                 name="ConfirmationScreen"
                 component={AuthConfirmationScreen}
-                options={{
-                    title: 'Confirmation',
-                }}
             />
         </Stack.Navigator>
     );
