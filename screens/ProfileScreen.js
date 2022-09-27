@@ -16,6 +16,7 @@ export default function ProfileScreen() {
     const [duplicates, setDuplicates] = useState(0)
 
     useFocusEffect(() => {
+        console.log(user)
         traverseCards()
     })
 
@@ -23,24 +24,10 @@ export default function ProfileScreen() {
         let car = 0
         let dup = 0
         Object.keys(cards).forEach(key => {
-            if(key === 'FWC') {
-                for(let i = 1; i<=30; i++) {
-                    const pom = cards[key].get(key+i)
-                    if(pom > 0)
-                        car += 1
-                    if(pom > 1)
-                        dup += pom -1
-                }
-            }
-            else {
-                for(let i = 1; i<=19; i++) {
-                    const pom = cards[key].get(key+i)
-                    if(pom > 0)
-                        car += 1
-                    if(pom > 1)
-                        dup += pom -1
-                }
-            }
+            const amount = cards[key]
+            if(amount > 1)
+                dup += amount
+            car++
         })
         setMyCards(car)
         setDuplicates(dup)
@@ -55,11 +42,11 @@ export default function ProfileScreen() {
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Feather name="phone" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.phoneNumber}</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.multiFactor.user.phoneNumber}</Text>
                 </View>
                 <Pressable style={styles.location}>
                     <MaterialIcons name="location-on" size={24} color="white" />
-                    <Text style={{color: 'white', fontSize: 14}}>{JSON.parse(user.photoURL).lat + ' ' + JSON.parse(user.photoURL).lng}</Text>
+                    <Text style={{color: 'white', fontSize: 14}}>{JSON.parse(user.photoURL?? user.location)?.lat + ' ' + JSON.parse(user.photoURL?? user.location)?.lng}</Text>
                 </Pressable>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(52, 52, 52, 0.5)', padding: scale(20), borderRadius: 6}}>
                     <View style={{marginRight: scale(10), alignItems: 'center'}}>

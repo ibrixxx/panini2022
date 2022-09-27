@@ -23,15 +23,15 @@ export default function AuthScreen() {
     // const autocompleteRef = useRef(null)
 
     useEffect(() => {
-        (async () => {
-            await onLocationCheck()
-        })();
+        onLocationCheck(true).catch(e => console.log(e))
     }, []);
 
     const onLocationCheck = async val => {
         if(!val){
             setLocation(null)
             setChecked(false)
+            const message = 'Odbili ste dati pristup lokaciji, drugi kolekcionari Vas nece vidjeti.'
+            Alert.alert(message)
             return
         }
         let { status } = await Location.requestForegroundPermissionsAsync();

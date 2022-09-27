@@ -13,15 +13,7 @@ export const useUserUpdate = () => {
 }
 
 const Context = ({children}) => {
-    const [user, setUser] = useState(async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('user')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
-            console.log(e)
-        }
-    })
-
+    const [user, setUser] = useState(null)
 
     return (
         <UserContext.Provider value={user}>

@@ -19,6 +19,8 @@ export default function AuthConfirmationScreen({route}) {
         )
         firebase.auth().signInWithCredential(credential)
             .then(res => {
+                setUser({...res.user, displayName: username, location: JSON.stringify(location)})
+                storeUser({...res.user, displayName: username, location: JSON.stringify(location)}).catch(e => console.log(e))
                 updateProfile(res.user, {
                     displayName: username, photoURL: JSON.stringify(location)})
                 .then(() => {
@@ -27,13 +29,11 @@ export default function AuthConfirmationScreen({route}) {
                 .catch((error) => {
                     console.log(error)
                 });
-                setUser(res.user)
-                storeUser(res.user).catch(e => console.log(e))
             })
             .catch(err => {
                 console.log(err)
             })
-        Alert.alert('Uspješna prijava!')
+        // Alert.alert('Uspješna prijava!')
     }
 
     const storeUser = async user => {

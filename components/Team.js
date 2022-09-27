@@ -6,18 +6,38 @@ import {scale} from 'react-native-size-matters'
 import {CardNumbers, FWCardNumbers} from "../data/CardData";
 import {useRecoilState} from "recoil";
 import {myCards} from "../atoms/MyCards";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-function Team({team, setAlbumCards}) {
+function Team({team}) {
     const [cards, setCards] = useRecoilState(myCards)
     const [checked, setChecked] = useState(() => {
         const limit = team.tag === 'FWC'? 30:19
-        for(let i = 1; i <= limit; i++) {
-            if(!cards[team.tag].get(team.tag+i))
-                return false
-        }
-        return true
+        let counter = 1
+        Object.keys(cards).forEach(key => {
+            if(key.substring(0, 3) === team.tag)
+                counter++
+        })
+        return counter === limit
     })
+
+    const storeChanges = () => {
+        (async () => {
+            try {
+                const jsonValue = JSON.stringify(cards)
+                await AsyncStorage.setItem('cards', jsonValue)
+            } catch (e) {
+                console.log('async eerr', e)
+            }
+        })()
+    }
+
+    const setMyCards = (tag, amount) => {
+        let obj = {...cards}
+        obj[tag] = amount
+        setCards(obj)
+        storeChanges()
+    }
 
     const onCheck = val => {
         if(val) {
@@ -61,7 +81,7 @@ function Team({team, setAlbumCards}) {
                     FWCardNumbers.map((row, index) => {
                             return (
                                 <View key={index} style={{flexDirection: 'row'}}>
-                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setAlbumCards={setAlbumCards}/>)}
+                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards}/>)}
                                 </View>
                             )
                         }
@@ -88,7 +108,7 @@ function Team({team, setAlbumCards}) {
                 CardNumbers.map((row, index) => {
                     return (
                         <View key={index} style={{flexDirection: 'row'}}>
-                            {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setAlbumCards={setAlbumCards}/>)}
+                            {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards}/>)}
                         </View>
                     )
                 })

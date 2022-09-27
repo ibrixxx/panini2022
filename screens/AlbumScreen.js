@@ -3,25 +3,28 @@ import Team from "../components/Team";
 import {AllCards, CardData} from "../data/CardData";
 import {scale, verticalScale} from 'react-native-size-matters'
 import {ProgressBar} from "react-native-paper";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useRecoilValue} from "recoil";
+import {myCards} from "../atoms/MyCards";
 
 export default function AlbumScreen() {
-    const [myAlbumCards, setAlbumCards] = useState(0)
+    const cards = useRecoilValue(myCards)
 
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <View style={styles.progress}>
                     <ProgressBar
-                        progress={myAlbumCards/AllCards.length}
+                        progress={(cards? Object.keys(cards).length : 0)/AllCards.length}
                         color={'#269900'}
                         style={{height: verticalScale(10)}}
                     />
-                    <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>{myAlbumCards}/{AllCards.length}</Text>
+                    <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>{cards? Object.keys(cards).length : 0}/{AllCards.length}</Text>
                 </View>
                 <FlatList
                     data={CardData}
-                    renderItem={({item}) => <Team team={item} setAlbumCards={setAlbumCards}/>}
+                    renderItem={({item}) => <Team team={item}/>}
                     keyExtractor={item => item.tag}
                 />
             </ImageBackground>

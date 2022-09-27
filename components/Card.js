@@ -3,49 +3,44 @@ import {useState, memo} from "react";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 
-function Card({tag, number, setChecked, setAlbumCards}) {
+function Card({tag, number, setChecked, setMyCards}) {
     const cards = useRecoilValue(myCards)
-    const [color, setColor] = useState(cards[tag].get(tag+number)? '#269900':'firebrick')
-    const [borderColor, setBorderColor] = useState(cards[tag].get(tag+number) > 1? 'dodgerblue':'black')
+    const [borderColor, setBorderColor] = useState(cards[tag+number] > 1? 'dodgerblue':'black')
 
     const getColor = () => {
-        return cards[tag].get(tag+number)? '#269900':'firebrick'
+        return cards[tag+number]? '#269900':'firebrick'
     }
 
     const isCompleted = () => {
         const limit = tag === 'FWC'? 30:19
-        for(let i = 1; i <= limit; i++) {
-            if(!cards[tag].get(tag+i))
-                return false
-        }
-        return true
+        let counter = 1
+        Object.keys(cards).forEach(key => {
+            if(key.substring(0, 3) === tag)
+                counter++
+        })
+        return counter === limit
     }
 
     const onPress = () => {
-        const amount = cards[tag].get(tag+number)
-        if(!amount) {
-            setColor('#269900')
-            setAlbumCards(prev => prev + 1)
+        const amount = cards[tag+number]
+        if(amount) {
+            setBorderColor('dodgerblue')
+            setMyCards(tag+number, amount + 1)
         }
         else
-            setBorderColor('dodgerblue')
-        cards[tag].set(tag+number, amount + 1)
+            setMyCards(tag+number, 1)
         if(isCompleted())
             setChecked(true)
     }
 
     const onLongPress = () => {
-        const amount = cards[tag].get(tag+number)
+        const amount = cards[tag+number]
         if(!amount)
             return
-        cards[tag].set(tag+number, amount - 1)
         if(amount - 1 <= 1) {
             setBorderColor('black')
-            if (amount - 1 === 0) {
-                setColor('firebrick')
-                setAlbumCards(prev => prev - 1)
-            }
         }
+        setMyCards(tag+number, amount -1)
         if(!isCompleted())
             setChecked(false)
     }
@@ -67,7 +62,7 @@ function Card({tag, number, setChecked, setAlbumCards}) {
                 <Text style={styles.tag}>{tag}</Text>
                 <Text style={styles.number}>{number === 30? '00' : number}</Text>
             </View>
-            <Text style={styles.number2}>{cards[tag].get(tag+number)}</Text>
+            <Text style={styles.number2}>{cards[tag+number]?? 0}</Text>
         </TouchableOpacity>
     );
 }
