@@ -10,6 +10,7 @@ import {scale, verticalScale} from "react-native-size-matters";
 // import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 // import {AntDesign} from "@expo/vector-icons";
 import * as Location from 'expo-location';
+import ExpoCheckbox from "expo-checkbox";
 
 
 export default function AuthScreen() {
@@ -17,24 +18,35 @@ export default function AuthScreen() {
     const [phone, setPhone] = useState('')
     const [username, setUsername] = useState('')
     const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+    const [checked, setChecked] = useState(location !== null)
     const recaptchaVerifier = useRef(null)
     // const autocompleteRef = useRef(null)
 
     useEffect(() => {
         (async () => {
-
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Odbili ste dati pristup lokaciji, cece vas moci naci drugi kolekcionari preko aplikacije.');
-                Alert.alert(errorMsg)
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation({lat: location.coords.latitude, lng: location.coords.longitude});
+            await onLocationCheck()
         })();
     }, []);
+
+    const onLocationCheck = async val => {
+        if(!val){
+            setLocation(null)
+            setChecked(false)
+            return
+        }
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            const message = 'Odbili ste dati pristup lokaciji, ncece vas moci naci drugi kolekcionari preko aplikacije.'
+            Alert.alert(message)
+            return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation({lat: location.coords.latitude, lng: location.coords.longitude});
+        setChecked(true)
+        console.log(location)
+    }
+
 
     const sendVerification = () => {
         const phoneProvider = new firebase.auth.PhoneAuthProvider()
@@ -48,7 +60,7 @@ export default function AuthScreen() {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={{uri: 'https://www.unotv.com/uploads/2022/07/fondo-02-175001.jpg'}} resizeMode="cover" style={styles.image}>
+            <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <FirebaseRecaptchaVerifierModal
                     ref={recaptchaVerifier}
                     firebaseConfig={firebaseConfig}
@@ -129,12 +141,22 @@ export default function AuthScreen() {
                     {/*    renderDescription={row => row.description || row.formatted_address || row.name}*/}
                     {/*/>*/}
                 </View>
+                <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between', margin: verticalScale(10)}}>
+                    <Text style={{color: 'white', fontStyle: 'italic'}}>Dopusti aplikaciji pristup Vašoj lokaciji.</Text>
+                    <ExpoCheckbox
+                        value={checked}
+                        color={checked ? '#4630EB' : undefined}
+                        onValueChange={value => onLocationCheck(value)}
+                        style={{marginHorizontal: scale(10), borderColor: 'black', backgroundColor: 'whitesmoke'}}
+                    />
+                </View>
                 <TouchableOpacity
+                    disabled={location === null || username.length < 2 || phone.length < 7}
                     style={styles.button}
                     onPress={sendVerification}
                 >
                     <Text style={{color: 'gold', fontWeight: 'bold'}}>
-                        POTVRDI
+                        Pošalji SMS kod
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>

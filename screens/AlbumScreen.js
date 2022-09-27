@@ -10,7 +10,7 @@ export default function AlbumScreen() {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={{uri: 'https://www.unotv.com/uploads/2022/07/fondo-02-175001.jpg'}} resizeMode="cover" style={styles.image}>
+            <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <View style={styles.progress}>
                     <ProgressBar
                         progress={myAlbumCards/AllCards.length}

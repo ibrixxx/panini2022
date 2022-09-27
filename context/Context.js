@@ -1,4 +1,5 @@
 import React, {useContext, useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserContext = React.createContext()
 const UserUpdateContext = React.createContext()
@@ -12,7 +13,14 @@ export const useUserUpdate = () => {
 }
 
 const Context = ({children}) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('user')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+            console.log(e)
+        }
+    })
 
 
     return (
