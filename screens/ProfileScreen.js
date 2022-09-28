@@ -37,12 +37,8 @@ export default function ProfileScreen() {
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                    <Ionicons name="person-outline" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.displayName}</Text>
-                </View>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Feather name="phone" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.multiFactor.user.phoneNumber}</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.phoneNumber}</Text>
                 </View>
                 <Pressable style={styles.location}>
                     <MaterialIcons name="location-on" size={24} color="white" />

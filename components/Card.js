@@ -1,10 +1,7 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useState, memo} from "react";
-import {useRecoilValue} from "recoil";
-import {myCards} from "../atoms/MyCards";
 
-function Card({tag, number, setChecked, setMyCards}) {
-    const cards = useRecoilValue(myCards)
+function Card({tag, number, setChecked, setMyCards, cards}) {
     const [borderColor, setBorderColor] = useState(cards[tag+number] > 1? 'dodgerblue':'black')
 
     const getColor = () => {
@@ -45,7 +42,7 @@ function Card({tag, number, setChecked, setMyCards}) {
             setChecked(false)
     }
 
-    if(number === 20 && tag !== 'FWC')
+    if(number === '20' && tag !== 'FWC')
         return (
             <View style={[styles.container, {opacity: 0}]}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -57,13 +54,13 @@ function Card({tag, number, setChecked, setMyCards}) {
         )
 
     return (
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: getColor(), borderColor: borderColor}]}>
+        <Pressable onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: getColor(), borderColor: borderColor}]}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.tag}>{tag}</Text>
                 <Text style={styles.number}>{number === 30? '00' : number}</Text>
             </View>
             <Text style={styles.number2}>{cards[tag+number]?? 0}</Text>
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 

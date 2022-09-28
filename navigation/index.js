@@ -16,7 +16,6 @@ const Main = () => {
             try {
                 const jsonValue = await AsyncStorage.getItem('user')
                 userUpdate(jsonValue != null ? JSON.parse(jsonValue) : null)
-
             }
             catch(e) {
                 console.log(e)

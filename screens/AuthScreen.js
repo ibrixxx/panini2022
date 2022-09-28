@@ -1,8 +1,8 @@
 import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
 import {useEffect, useRef, useState} from "react";
 import {FirebaseRecaptchaVerifierModal} from "expo-firebase-recaptcha";
-import firebase from "firebase/compat";
 import {firebaseConfig} from "../firebase";
+import {PhoneAuthProvider, getAuth} from 'firebase/auth'
 import {TextInput} from "react-native-paper";
 import {useNavigation} from "@react-navigation/native";
 import {scale, verticalScale} from "react-native-size-matters";
@@ -11,12 +11,14 @@ import {scale, verticalScale} from "react-native-size-matters";
 // import {AntDesign} from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import ExpoCheckbox from "expo-checkbox";
+import {getApp} from "firebase/app";
 
+const app = getApp();
+const auth = getAuth(app);
 
 export default function AuthScreen() {
     const navigation = useNavigation()
     const [phone, setPhone] = useState('')
-    const [username, setUsername] = useState('')
     const [location, setLocation] = useState(null);
     const [checked, setChecked] = useState(location !== null)
     const recaptchaVerifier = useRef(null)
@@ -44,15 +46,14 @@ export default function AuthScreen() {
         let location = await Location.getCurrentPositionAsync({});
         setLocation({lat: location.coords.latitude, lng: location.coords.longitude});
         setChecked(true)
-        console.log(location)
     }
 
 
     const sendVerification = () => {
-        const phoneProvider = new firebase.auth.PhoneAuthProvider()
+        const phoneProvider = new PhoneAuthProvider(auth)
         phoneProvider.verifyPhoneNumber(phone, recaptchaVerifier?.current)
             .then(res => {
-                navigation.navigate('ConfirmationScreen', {verificationID: res, location: location, username: username})
+                navigation.navigate('ConfirmationScreen', {verificationID: res, location: location, auth: auth})
             })
         setPhone('')
     }
@@ -72,17 +73,6 @@ export default function AuthScreen() {
                         keyboardType={'phone-pad'}
                         autoCompleteType={'tel'}
                         lable={'broj telefona'}
-                        style={styles.input}
-                        mode={'outlined'}
-                        activeOutlineColor={'gold'}
-                        outlineColor={'whitesmoke'}
-                        theme={{ colors: { text: 'white', placeholder: 'gray', label: 'white'}}}
-                    />
-                    <TextInput
-                        autoCapitalize={'none'}
-                        placeholder={'name'}
-                        onChangeText={setUsername}
-                        lable={'nick'}
                         style={styles.input}
                         mode={'outlined'}
                         activeOutlineColor={'gold'}
@@ -151,7 +141,7 @@ export default function AuthScreen() {
                     />
                 </View>
                 <TouchableOpacity
-                    disabled={location === null || username.length < 2 || phone.length < 7}
+                    disabled={location === null || phone.length < 7}
                     style={styles.button}
                     onPress={sendVerification}
                 >

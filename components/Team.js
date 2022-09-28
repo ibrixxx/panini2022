@@ -1,15 +1,16 @@
 import {memo, useState} from "react";
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import ExpoCheckbox from "expo-checkbox";
 import Card from "./Card";
 import {scale} from 'react-native-size-matters'
-import {CardNumbers, FWCardNumbers} from "../data/CardData";
 import {useRecoilState} from "recoil";
 import {myCards} from "../atoms/MyCards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {useUser} from "../context/Context";
+import { getDatabase, ref, set } from 'firebase/database';
 
 function Team({team}) {
+    const user = useUser()
     const [cards, setCards] = useRecoilState(myCards)
     const [checked, setChecked] = useState(() => {
         const limit = team.tag === 'FWC'? 30:19
@@ -32,11 +33,20 @@ function Team({team}) {
         })()
     }
 
+    const storeDataToDatabase = () => {
+        const db = getDatabase();
+        const reference = ref(db, 'users/' + user.phoneNumber);
+        set(reference, {
+            cards: cards,
+        }).then(r => console.log('r ', r)).catch(e => console.log(e));
+    }
+
     const setMyCards = (tag, amount) => {
         let obj = {...cards}
         obj[tag] = amount
         setCards(obj)
         storeChanges()
+        storeDataToDatabase()
     }
 
     const onCheck = val => {
@@ -44,9 +54,9 @@ function Team({team}) {
             const limit = team.tag === 'FWC'? 30:19
             let temp = cards
             for(let i = 1; i <= limit; i++) {
-                const amount = temp[team.tag].get(team.tag+i)
+                const amount = temp[team.tag+i]
                 if(amount === 0)
-                    temp[team.tag].set(team.tag+i, amount + 1)
+                    temp[team.tag+i] = amount + 1
                 setCards(temp)
             }
         }
@@ -54,13 +64,15 @@ function Team({team}) {
             const limit = team.tag === 'FWC'? 30:19
             let temp = cards
             for(let i = 1; i <= limit; i++) {
-                const amount = temp[team.tag].get(team.tag+i)
-                temp[team.tag].set(team.tag+i, amount - 1)
+                const amount = temp[team.tag+i]
+                temp[team.tag+i] = amount - 1
                 setCards(temp)
             }
         }
         setChecked(val)
     }
+
+    const renderItem = ({item}) => <Card tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards} cards={cards}/>
 
     if(team.tag === 'FWC')
         return (
@@ -77,16 +89,13 @@ function Team({team}) {
                         style={{marginHorizontal: scale(10), borderColor: 'black', backgroundColor: 'whitesmoke'}}
                     />
                 </View>
-                {
-                    FWCardNumbers.map((row, index) => {
-                            return (
-                                <View key={index} style={{flexDirection: 'row'}}>
-                                    {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards}/>)}
-                                </View>
-                            )
-                        }
-                    )
-                }
+                <FlatList
+                    data={['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29']}
+                    keyExtractor={item => team.tag + item}
+                    numColumns={5}
+                    renderItem={renderItem}
+                    removeClippedSubviews={true}
+                />
             </View>
         )
 
@@ -104,15 +113,13 @@ function Team({team}) {
                     style={{marginHorizontal: scale(10), borderColor: 'black', backgroundColor: 'whitesmoke'}}
                 />
             </View>
-            {
-                CardNumbers.map((row, index) => {
-                    return (
-                        <View key={index} style={{flexDirection: 'row'}}>
-                            {row.map(item => <Card key={team.tag + item}  tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards}/>)}
-                        </View>
-                    )
-                })
-            }
+            <FlatList
+                data={['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']}
+                keyExtractor={item => team.tag + item}
+                numColumns={5}
+                renderItem={renderItem}
+                removeClippedSubviews={true}
+            />
         </View>
     );
 }

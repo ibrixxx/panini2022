@@ -1,7 +1,7 @@
 import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
 import {TextInput} from "react-native-paper";
 import {useState} from "react";
-import firebase from "firebase/compat";
+import {PhoneAuthProvider, signInWithCredential} from 'firebase/auth'
 import {useUserUpdate} from "../context/Context";
 import { updateProfile } from "firebase/auth"
 import {scale, verticalScale} from "react-native-size-matters";
@@ -9,20 +9,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AuthConfirmationScreen({route}) {
     const setUser = useUserUpdate()
-    const {verificationID, location, username} = route.params
+    const {verificationID, location, auth} = route.params
     const [code, setCode] = useState('')
 
     const confirmCode = () => {
-        const credential = firebase.auth.PhoneAuthProvider.credential(
+        const credential = PhoneAuthProvider.credential(
             verificationID,
             code
         )
-        firebase.auth().signInWithCredential(credential)
+        signInWithCredential(auth, credential)
             .then(res => {
-                setUser({...res.user, displayName: username, location: JSON.stringify(location)})
-                storeUser({...res.user, displayName: username, location: JSON.stringify(location)}).catch(e => console.log(e))
+                setUser({...res.user, location: JSON.stringify(location)})
+                storeUser({...res.user, location: JSON.stringify(location)}).catch(e => console.log(e))
                 updateProfile(res.user, {
-                    displayName: username, photoURL: JSON.stringify(location)})
+                    photoURL: JSON.stringify(location)})
                 .then(() => {
                     setCode('')
                 })

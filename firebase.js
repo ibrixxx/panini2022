@@ -1,5 +1,5 @@
-import firebase from "firebase/compat";
-import { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId, measurementId } from '@env';
+import {initializeApp, getApps, getApp} from 'firebase/app'
+import { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId, measurementId, databaseURL } from '@env';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfig = {
@@ -9,11 +9,11 @@ export const firebaseConfig = {
     storageBucket: storageBucket,
     messagingSenderId: messagingSenderId,
     appId: appId,
-    measurementId: measurementId
+    measurementId: measurementId,
+    databaseURL: databaseURL
 };
 
-if(!firebase.apps.length)
-    firebase.initializeApp(firebaseConfig);
-
+if(!getApps().length)
+    initializeApp(firebaseConfig);
 
 
