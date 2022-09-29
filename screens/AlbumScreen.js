@@ -5,20 +5,9 @@ import {scale, verticalScale} from 'react-native-size-matters'
 import {ProgressBar} from "react-native-paper";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
-import {useEffect} from "react";
-import {getDatabase, ref, onValue} from "firebase/database";
 
 export default function AlbumScreen() {
     const cards = useRecoilValue(myCards)
-
-    useEffect(() => {
-        const db = getDatabase();
-        const reference = ref(db, 'users');
-        onValue(reference, (snapshot) => {
-            const res = snapshot.val();
-            console.log("Res: " + JSON.stringify(res));
-        });
-    }, [])
 
     return (
         <View style={styles.container}>

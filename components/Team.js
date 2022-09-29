@@ -35,9 +35,10 @@ function Team({team}) {
 
     const storeDataToDatabase = () => {
         const db = getDatabase();
-        const reference = ref(db, 'users/' + user.phoneNumber);
+        const reference = ref(db, 'users/' + '+30762420790');
         set(reference, {
             cards: cards,
+            location: {lat: JSON.parse(user.location?? user.photoURL)?.lat, lng: JSON.parse(user.location?? user.photoURL)?.lng}
         }).then(r => console.log('r ', r)).catch(e => console.log(e));
     }
 

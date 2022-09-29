@@ -4,12 +4,14 @@ import AuthNavigation from "./AuthNavigation";
 import {useEffect} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useRecoilState} from "recoil";
-import {myCards} from "../atoms/MyCards";
+import {collectorsData, myCards} from "../atoms/MyCards";
+import {getDatabase, onValue, ref} from "firebase/database";
 
 const Main = () => {
     const user = useUser()
     const userUpdate = useUserUpdate()
     const [cards, setCards] = useRecoilState(myCards)
+    const [data, setData] = useRecoilState(collectorsData)
 
     useEffect(() => {
         (async () => {
@@ -28,6 +30,13 @@ const Main = () => {
             catch(e) {
                 console.log(e)
             }
+            const db = getDatabase();
+            const reference = ref(db, 'users');
+            onValue(reference, (snapshot) => {
+                const res = snapshot.val();
+                console.log("Res: " + JSON.stringify(res));
+                setData(res)
+            });
         })()
     }, [])
 

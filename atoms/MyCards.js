@@ -38,3 +38,8 @@ export const myCards = atom({
     default: {}
 })
 
+export const collectorsData = atom({
+    key: 'collectors',
+    default: {}
+})
+
