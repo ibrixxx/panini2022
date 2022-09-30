@@ -7,17 +7,27 @@ import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 import {useFocusEffect} from "@react-navigation/native";
 import {AllCards} from "../data/CardData";
-import {useUser} from "../context/Context";
+import {useUser, useUserUpdate} from "../context/Context";
+import Geocoder from 'react-native-geocoding';
+import { GOOGLE_API_KEY } from '@env';
+
+Geocoder.init(GOOGLE_API_KEY)
 
 export default function ProfileScreen() {
     const cards = useRecoilValue(myCards)
     const user = useUser()
+    const updateUser = useUserUpdate()
     const [myAlbumCards, setMyCards] = useState(0)
     const [duplicates, setDuplicates] = useState(0)
+    const [location, setLocation] = useState('')
 
     useFocusEffect(() => {
-        console.log(user)
         traverseCards()
+        if(!location)
+            Geocoder.from(JSON.parse( user.location?? user.photoURL)).then(json => {
+                const addressComponent = json.results[0].address_components[1].long_name + ', ' + json.results[0].address_components[2].long_name;
+                setLocation(addressComponent)
+            }).catch(error => console.log(error));
     })
 
     const traverseCards = () => {
@@ -26,25 +36,34 @@ export default function ProfileScreen() {
         Object.keys(cards).forEach(key => {
             const amount = cards[key]
             if(amount > 1)
-                dup += amount
+                dup += amount - 1
             car++
         })
         setMyCards(car)
         setDuplicates(dup)
     }
 
+    const logOut = () => {
+        updateUser(null)
+    }
+
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                    <Feather name="phone" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.phoneNumber}</Text>
+                <View style={styles.phone}>
+                    <View style={styles.phone1}>
+                        <Feather name="phone" size={24} color="white" />
+                        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, marginLeft: scale(10)}}>{user.phoneNumber}</Text>
+                    </View>
+                    <View style={styles.phone2}>
+                        <MaterialIcons onPress={logOut} name="logout" size={24} color="red" />
+                    </View>
                 </View>
                 <Pressable style={styles.location}>
                     <MaterialIcons name="location-on" size={24} color="white" />
-                    <Text style={{color: 'white', fontSize: 14}}>{JSON.parse(user.photoURL?? user.location)?.lat + ' ' + JSON.parse(user.photoURL?? user.location)?.lng}</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 17, marginLeft: scale(10)}}>{location}</Text>
                 </Pressable>
-                <View style={{flexDirection: 'row', backgroundColor: 'rgba(52, 52, 52, 0.5)', padding: scale(20), borderRadius: 6}}>
+                <View style={styles.data}>
                     <View style={{marginRight: scale(10), alignItems: 'center'}}>
                         <AnimatedCircularProgress
                             size={100}
@@ -88,21 +107,70 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     image: {
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: verticalScale(150)
+        paddingVertical: verticalScale(150),
+        paddingHorizontal: scale(40)
     },
     location: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         borderRadius: 6,
         borderWidth: 1,
-        borderColor: 'whitesmoke',
-        padding: scale(14)
+        borderColor: 'gray',
+        padding: scale(14),
+        backgroundColor: 'rgba(52, 52, 52, 0.5)',
+        width: '100%',
+        marginBottom: verticalScale(10)
+    },
+    data: {
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.5)',
+        padding: scale(20),
+        width: '100%',
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: 'gray',
+    },
+    phone: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: verticalScale(10)
+    },
+    phone1: {
+        flex: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.5)',
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: 'gray',
+        marginRight: scale(2),
+        height: '100%',
+    },
+    phone2: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.5)',
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: 'red',
+        marginLeft: scale(2),
+        height: '100%',
     }
 });

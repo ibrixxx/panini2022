@@ -15,9 +15,11 @@ const Main = () => {
 
     useEffect(() => {
         (async () => {
+            let usr = null
             try {
                 const jsonValue = await AsyncStorage.getItem('user')
                 userUpdate(jsonValue != null ? JSON.parse(jsonValue) : null)
+                usr = jsonValue != null ? JSON.parse(jsonValue) : null
             }
             catch(e) {
                 console.log(e)
@@ -25,17 +27,18 @@ const Main = () => {
             try {
                 const jsonValue = await AsyncStorage.getItem('cards')
                 console.log('jsonValue', jsonValue)
-                setCards(jsonValue != null ? JSON.parse(jsonValue) : {})
+                // setCards(jsonValue != null ? JSON.parse(jsonValue) : {})
             }
             catch(e) {
                 console.log(e)
             }
             const db = getDatabase();
             const reference = ref(db, 'users');
-            onValue(reference, (snapshot) => {
+            await onValue(reference, (snapshot) => {
                 const res = snapshot.val();
                 console.log("Res: " + JSON.stringify(res));
                 setData(res)
+                setCards(res[usr?.phoneNumber].cards)
             });
         })()
     }, [])

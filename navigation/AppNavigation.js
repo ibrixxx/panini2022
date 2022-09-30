@@ -3,8 +3,34 @@ import AlbumScreen from "../screens/AlbumScreen";
 import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import {createStackNavigator} from "@react-navigation/stack";
+import AuthScreen from "../screens/AuthScreen";
+import AuthConfirmationScreen from "../screens/AuthConfirmationScreen";
+import DuplicateCards from "../screens/DuplicateCards";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+
+const MapStack = () => {
+    return (
+        <Stack.Navigator
+            initialRouteName="MapView"
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen
+                name="MapView"
+                component={MapScreen}
+            />
+            <Stack.Screen
+                name="DuplicateCards"
+                component={DuplicateCards}
+            />
+        </Stack.Navigator>
+    )
+}
 
 const AppNavigation = () => {
     return (
@@ -26,7 +52,7 @@ const AppNavigation = () => {
             />
             <Tab.Screen
                 name="Map"
-                component={MapScreen}
+                component={MapStack}
                 options={{
                     tabBarLabel: () => null,
                     tabBarIcon: ({color}) => <MaterialCommunityIcons name="map-search-outline" size={24} color={color} />
