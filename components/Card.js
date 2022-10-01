@@ -1,14 +1,17 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {useState, memo} from "react";
+import {memo} from "react";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 
 function Card({tag, number, setChecked, setMyCards}) {
     const cards = useRecoilValue(myCards)
-    const [borderColor, setBorderColor] = useState(cards[tag+number] > 1? 'dodgerblue':'black')
 
     const getColor = () => {
         return cards[tag+number]? '#269900':'firebrick'
+    }
+
+    const getBorderColor = () => {
+        return cards[tag+number] > 1? 'dodgerblue':'black'
     }
 
     const isCompleted = () => {
@@ -24,7 +27,6 @@ function Card({tag, number, setChecked, setMyCards}) {
     const onPress = () => {
         const amount = cards[tag+number]
         if(amount) {
-            setBorderColor('dodgerblue')
             setMyCards(tag+number, amount + 1)
         }
         else
@@ -37,9 +39,6 @@ function Card({tag, number, setChecked, setMyCards}) {
         const amount = cards[tag+number]
         if(!amount)
             return
-        if(amount - 1 <= 1) {
-            setBorderColor('black')
-        }
         setMyCards(tag+number, amount -1)
         if(!isCompleted())
             setChecked(false)
@@ -57,10 +56,10 @@ function Card({tag, number, setChecked, setMyCards}) {
         )
 
     return (
-        <Pressable onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: getColor(), borderColor: borderColor}]}>
+        <Pressable onPress={onPress} onLongPress={onLongPress} style={[styles.container, {backgroundColor: getColor(), borderColor: getBorderColor()}]}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.tag}>{tag}</Text>
-                <Text style={styles.number}>{number === 30? '00' : number}</Text>
+                <Text style={styles.number}>{number === '0'? '00' : number}</Text>
             </View>
             <Text style={styles.number2}>{cards[tag+number]?? 0}</Text>
         </Pressable>

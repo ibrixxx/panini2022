@@ -22,11 +22,11 @@ export default function GroupScreen({route}) {
             case 'E':
                 return CardData.slice(17, 21)
             case 'F':
-                return CardData.slice(21, 24)
+                return CardData.slice(21, 25)
             case 'G':
-                return CardData.slice(24, 28)
+                return CardData.slice(25, 29)
             case 'H':
-                return CardData.slice(28, 32)
+                return CardData.slice(29, 33)
         }
     }
 

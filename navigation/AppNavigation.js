@@ -16,7 +16,9 @@ const AlbumStack = () => {
         <Stack.Navigator
             initialRouteName="AlbumScreen"
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                animationEnabled: true,
+                animationTypeForReplace: 'pop'
             }}
         >
             <Stack.Screen
@@ -24,6 +26,9 @@ const AlbumStack = () => {
                 component={AlbumScreen}
             />
             <Stack.Screen
+                options={{
+                    presentation: 'transparentModal'
+                }}
                 name="GroupScreen"
                 component={GroupScreen}
             />
@@ -37,7 +42,8 @@ const MapStack = () => {
         <Stack.Navigator
             initialRouteName="MapView"
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                animationEnabled: true
             }}
         >
             <Stack.Screen
@@ -45,6 +51,9 @@ const MapStack = () => {
                 component={MapScreen}
             />
             <Stack.Screen
+                options={{
+                    presentation: 'modal'
+                }}
                 name="DuplicateCards"
                 component={DuplicateCards}
             />

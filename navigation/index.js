@@ -34,30 +34,32 @@ const Main = () => {
             try {
                 const jsonValue = await AsyncStorage.getItem('cards')
                 const savedCardsLength = jsonValue != null ? Object.keys(JSON.parse(jsonValue)).length : 0
+                setCards(jsonValue != null ? JSON.parse(jsonValue) : {})
                 // console.log('jsonValue', jsonValue, savedCardsLength)
                 const db = getDatabase();
-                const reference = ref(db, 'users');
+                const reference = await ref(db, 'users');
                 await onValue(reference, (snapshot) => {
                     const res = snapshot.val();
                     // console.log("Res: " + JSON.stringify(res));
                     setData(res)
                     savedCards = user? res[user?.phoneNumber].cards : res[usr?.phoneNumber].cards
-                });
-                // console.log(cards)
-                if(!cards) {
-                    console.log(savedCards, savedCardsLength)
-                    if(savedCards && savedCardsLength < Object.keys(savedCards).length)
+                    if(!cards && !jsonValue && savedCards && savedCardsLength < Object.keys(savedCards).length) {
+                        // console.log('t11')
                         setCards(savedCards)
-                    else {
-                        setCards(jsonValue != null ? JSON.parse(jsonValue) : {})
+                    }
+                    if(savedCardsLength > Object.keys(savedCards).length) {
+                        // console.log('t2')
                         const db = getDatabase();
-                        const reference = ref(db, 'users/' + usr.phoneNumber);
+                        const reference = ref(db, 'users/' + usr?.phoneNumber?? user?.phoneNumber);
                         set(reference, {
                             cards: JSON.parse(jsonValue),
-                            location: {lat: JSON.parse(usr.location?? usr.photoURL)?.lat, lng: JSON.parse(usr.location?? usr.photoURL)?.lng}
-                        }).then(r => console.log('r ', r)).catch(e => console.log(e));
+                            location: {
+                                lat: JSON.parse(usr.location ?? usr.photoURL)?.lat,
+                                lng: JSON.parse(usr.location ?? usr.photoURL)?.lng
+                            }
+                        }).catch(e => console.log(e));
                     }
-                }
+                });
                 setReady(true)
             }
             catch(e) {

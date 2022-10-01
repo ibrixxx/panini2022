@@ -19,7 +19,7 @@ function Team({team}) {
             if(key.substring(0, 3) === team.tag)
                 counter++
         })
-        return counter === limit
+        return counter >= limit
     })
 
     const storeChanges = obj => {
@@ -39,7 +39,7 @@ function Team({team}) {
         set(reference, {
             cards: obj,
             location: {lat: JSON.parse(user.location?? user.photoURL)?.lat, lng: JSON.parse(user.location?? user.photoURL)?.lng}
-        }).then(r => console.log('r ', r)).catch(e => console.log(e));
+        }).catch(e => console.log(e));
     }
 
     const setMyCards = (tag, amount) => {
@@ -54,25 +54,40 @@ function Team({team}) {
     }
 
     const onCheck = val => {
+        let temp = {...cards}
         if(val) {
             const limit = team.tag === 'FWC'? 30:19
-            let temp = cards
+            if(limit === 30) {
+                const amount = temp[team.tag+'0']
+                if(!amount)
+                    temp[team.tag+'0'] = 1
+            }
             for(let i = 1; i <= limit; i++) {
                 const amount = temp[team.tag+i]
-                if(amount === 0)
-                    temp[team.tag+i] = amount + 1
-                setCards(temp)
+                if(!amount)
+                    temp[team.tag+i] = 1
             }
         }
         else {
             const limit = team.tag === 'FWC'? 30:19
-            let temp = cards
+            if(limit === 30) {
+                const amount = temp[team.tag+'0']
+                if(amount <= 1)
+                    delete temp[team.tag+'0']
+                else
+                    temp[team.tag+'0'] = amount - 1
+            }
             for(let i = 1; i <= limit; i++) {
                 const amount = temp[team.tag+i]
-                temp[team.tag+i] = amount - 1
-                setCards(temp)
+                if(amount <= 1)
+                    delete temp[team.tag+i]
+                else
+                    temp[team.tag+i] = amount - 1
             }
         }
+        setCards(temp)
+        storeChanges(temp)
+        storeDataToDatabase(temp)
         setChecked(val)
     }
 
@@ -94,7 +109,7 @@ function Team({team}) {
                     />
                 </View>
                 <FlatList
-                    data={['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29']}
+                    data={['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29']}
                     keyExtractor={item => team.tag + item}
                     numColumns={5}
                     renderItem={renderItem}

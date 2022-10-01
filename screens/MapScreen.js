@@ -22,7 +22,6 @@ export default function MapScreen() {
             Object.keys(data[key].cards).forEach(card => {
                 if(!(card in cards) && data[key].cards[card] > 1) {
                     tempData[card] = data[key].cards[card]
-                    console.log(card, data[key].cards[card])
                 }
             })
             temp[key] = {
@@ -67,7 +66,7 @@ export default function MapScreen() {
             >
                 {
                     Object.keys(mapCards).map(item => {
-                        if(mapCards[item].location)
+                        if(mapCards[item].location && item !== user.phoneNumber)
                             return (
                                 <Marker
                                     key={item+'marker'}

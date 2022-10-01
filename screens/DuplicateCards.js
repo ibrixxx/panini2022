@@ -10,7 +10,7 @@ export default function DuplicateCards({route}) {
         return (
             <View style={styles.listItem}>
                 <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>{item}</Caption>
-                <Title style={{color: 'white'}}>{data.cards[item]}x</Title>
+                <Title style={{color: 'white'}}>{data.cards[item]-1}x</Title>
             </View>
         )
     }
