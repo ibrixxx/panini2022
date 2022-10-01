@@ -1,4 +1,4 @@
-import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
+import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground, Keyboard, Pressable} from "react-native";
 import {TextInput} from "react-native-paper";
 import {useState} from "react";
 import {PhoneAuthProvider, signInWithCredential} from 'firebase/auth'
@@ -6,10 +6,14 @@ import {useUserUpdate} from "../context/Context";
 import { updateProfile } from "firebase/auth"
 import {scale, verticalScale} from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useRecoilState} from "recoil";
+import {myCards} from "../atoms/MyCards";
+import {getDatabase, onValue, ref} from "firebase/database";
 
 export default function AuthConfirmationScreen({route}) {
     const setUser = useUserUpdate()
     const {verificationID, location, auth} = route.params
+    const [cards, setCards] = useRecoilState(myCards)
     const [code, setCode] = useState('')
 
     const confirmCode = () => {
@@ -19,8 +23,17 @@ export default function AuthConfirmationScreen({route}) {
         )
         signInWithCredential(auth, credential)
             .then(res => {
-                setUser({...res.user, location: JSON.stringify(location)})
-                storeUser({...res.user, location: JSON.stringify(location)}).catch(e => console.log(e))
+                const newUser = {...res.user, location: JSON.stringify(location)}
+                setUser(newUser)
+                storeUser(newUser).catch(e => console.log(e))
+                if(!Object.keys(cards).length) {
+                    const db = getDatabase();
+                    const reference = ref(db, 'users');
+                    onValue(reference, (snapshot) => {
+                        const res = snapshot.val();
+                        setCards(res[newUser?.phoneNumber]?.cards)
+                    })
+                }
                 updateProfile(res.user, {
                     photoURL: JSON.stringify(location)})
                 .then(() => {
@@ -33,7 +46,6 @@ export default function AuthConfirmationScreen({route}) {
             .catch(err => {
                 console.log(err)
             })
-        // Alert.alert('Uspješna prijava!')
     }
 
     const storeUser = async user => {
@@ -46,7 +58,7 @@ export default function AuthConfirmationScreen({route}) {
     }
 
     return (
-        <View style={styles.container}>
+        <Pressable onPress={Keyboard.dismiss} style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <TextInput
                     autoCapitalize={'none'}
@@ -68,7 +80,7 @@ export default function AuthConfirmationScreen({route}) {
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>
-        </View>
+        </Pressable>
     );
 }
 

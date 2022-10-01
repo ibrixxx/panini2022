@@ -1,4 +1,4 @@
-import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
+import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground, Pressable, Keyboard} from "react-native";
 import {useEffect, useRef, useState} from "react";
 import {FirebaseRecaptchaVerifierModal} from "expo-firebase-recaptcha";
 import {firebaseConfig} from "../firebase";
@@ -60,7 +60,7 @@ export default function AuthScreen() {
 
 
     return (
-        <View style={styles.container}>
+        <Pressable onPress={Keyboard.dismiss} style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <FirebaseRecaptchaVerifierModal
                     ref={recaptchaVerifier}
@@ -150,7 +150,7 @@ export default function AuthScreen() {
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>
-        </View>
+        </Pressable>
     );
 }
 

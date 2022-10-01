@@ -66,7 +66,7 @@ export default function MapScreen() {
             >
                 {
                     Object.keys(mapCards).map(item => {
-                        if(mapCards[item].location && item !== user.phoneNumber)
+                        if(mapCards[item].location && item !== user.phoneNumber && item !== undefined)
                             return (
                                 <Marker
                                     key={item+'marker'}
