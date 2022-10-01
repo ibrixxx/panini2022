@@ -1,17 +1,36 @@
 import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import Team from "../components/Team";
-import {AllCards, CardData, GroupData} from "../data/CardData";
+import {AllCards, CardData} from "../data/CardData";
 import {scale, verticalScale} from 'react-native-size-matters'
 import {ProgressBar} from "react-native-paper";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
-import ExpoCheckbox from "expo-checkbox";
-import Group from "../components/Group";
 
-export default function AlbumScreen() {
+export default function GroupScreen({route}) {
+    const {group} = route.params
     const cards = useRecoilValue(myCards)
+    const getData = () => {
+        switch (group) {
+            case 'A':
+                return CardData.slice(1, 5)
+            case 'B':
+                return CardData.slice(5, 9)
+            case 'C':
+                return CardData.slice(9, 13)
+            case 'D':
+                return CardData.slice(13, 17)
+            case 'E':
+                return CardData.slice(17, 21)
+            case 'F':
+                return CardData.slice(21, 24)
+            case 'G':
+                return CardData.slice(24, 28)
+            case 'H':
+                return CardData.slice(28, 32)
+        }
+    }
 
-    const renderItem = ({item}) => <Group item={item}/>
+    const renderItem = ({item}) => <Team team={item}/>
 
     return (
         <View style={styles.container}>
@@ -24,9 +43,8 @@ export default function AlbumScreen() {
                     />
                     <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>{cards? Object.keys(cards).length : 0}/{AllCards.length}</Text>
                 </View>
-                <Team team={CardData[0]} />
                 <FlatList
-                    data={GroupData}
+                    data={getData()}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item.name + index}
                 />

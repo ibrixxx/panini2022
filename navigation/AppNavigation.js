@@ -4,12 +4,32 @@ import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import {createStackNavigator} from "@react-navigation/stack";
-import AuthScreen from "../screens/AuthScreen";
-import AuthConfirmationScreen from "../screens/AuthConfirmationScreen";
 import DuplicateCards from "../screens/DuplicateCards";
+import GroupScreen from "../screens/GroupScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+
+const AlbumStack = () => {
+    return (
+        <Stack.Navigator
+            initialRouteName="AlbumScreen"
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen
+                name="AlbumScreen"
+                component={AlbumScreen}
+            />
+            <Stack.Screen
+                name="GroupScreen"
+                component={GroupScreen}
+            />
+        </Stack.Navigator>
+    )
+}
 
 
 const MapStack = () => {
@@ -44,7 +64,7 @@ const AppNavigation = () => {
             initialRouteName={'Album'}>
             <Tab.Screen
                 name="Album"
-                component={AlbumScreen}
+                component={AlbumStack}
                 options={{
                     tabBarLabel: () => null,
                     tabBarIcon: ({color}) => <MaterialCommunityIcons name="sticker-check-outline" size={24} color={color} />,

@@ -35,7 +35,7 @@ import { atom } from 'recoil';
 
 export const myCards = atom({
     key: 'myCards',
-    default: {}
+    default: null
 })
 
 export const collectorsData = atom({

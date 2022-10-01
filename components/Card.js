@@ -1,7 +1,10 @@
-import {Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useState, memo} from "react";
+import {useRecoilValue} from "recoil";
+import {myCards} from "../atoms/MyCards";
 
-function Card({tag, number, setChecked, setMyCards, cards}) {
+function Card({tag, number, setChecked, setMyCards}) {
+    const cards = useRecoilValue(myCards)
     const [borderColor, setBorderColor] = useState(cards[tag+number] > 1? 'dodgerblue':'black')
 
     const getColor = () => {

@@ -22,10 +22,10 @@ function Team({team}) {
         return counter === limit
     })
 
-    const storeChanges = () => {
+    const storeChanges = obj => {
         (async () => {
             try {
-                const jsonValue = JSON.stringify(cards)
+                const jsonValue = JSON.stringify(obj)
                 await AsyncStorage.setItem('cards', jsonValue)
             } catch (e) {
                 console.log('async eerr', e)
@@ -33,21 +33,24 @@ function Team({team}) {
         })()
     }
 
-    const storeDataToDatabase = () => {
+    const storeDataToDatabase = obj => {
         const db = getDatabase();
-        const reference = ref(db, 'users/' + '+30762420790');
+        const reference = ref(db, 'users/' + user.phoneNumber);
         set(reference, {
-            cards: cards,
+            cards: obj,
             location: {lat: JSON.parse(user.location?? user.photoURL)?.lat, lng: JSON.parse(user.location?? user.photoURL)?.lng}
         }).then(r => console.log('r ', r)).catch(e => console.log(e));
     }
 
     const setMyCards = (tag, amount) => {
         let obj = {...cards}
-        obj[tag] = amount
+        if(amount)
+            obj[tag] = amount
+        else
+            delete obj[tag]
         setCards(obj)
-        storeChanges()
-        storeDataToDatabase()
+        storeChanges(obj)
+        storeDataToDatabase(obj)
     }
 
     const onCheck = val => {
@@ -73,7 +76,7 @@ function Team({team}) {
         setChecked(val)
     }
 
-    const renderItem = ({item}) => <Card tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards} cards={cards}/>
+    const renderItem = ({item}) => <Card tag={team.tag} number={item} setChecked={setChecked} setMyCards={setMyCards} />
 
     if(team.tag === 'FWC')
         return (
