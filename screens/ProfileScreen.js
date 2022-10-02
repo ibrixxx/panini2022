@@ -10,6 +10,7 @@ import {AllCards} from "../data/CardData";
 import {useUser, useUserUpdate} from "../context/Context";
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API_KEY } from '@env';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 Geocoder.init(GOOGLE_API_KEY)
 
@@ -43,7 +44,8 @@ export default function ProfileScreen() {
         setDuplicates(dup)
     }
 
-    const logOut = () => {
+    const logOut = async () => {
+        await AsyncStorage.removeItem('user')
         updateUser(null)
     }
 

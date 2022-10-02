@@ -5,6 +5,7 @@ import {scale, verticalScale} from 'react-native-size-matters'
 import {ProgressBar} from "react-native-paper";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
+import MyProgressBar from "../components/ProgressBar";
 
 export default function GroupScreen({route}) {
     const {group} = route.params
@@ -35,14 +36,7 @@ export default function GroupScreen({route}) {
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
-                <View style={styles.progress}>
-                    <ProgressBar
-                        progress={(cards? Object.keys(cards).length : 0)/AllCards.length}
-                        color={'#269900'}
-                        style={{height: verticalScale(10)}}
-                    />
-                    <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>{cards? Object.keys(cards).length : 0}/{AllCards.length}</Text>
-                </View>
+                <MyProgressBar cards={cards}/>
                 <FlatList
                     data={getData()}
                     renderItem={renderItem}

@@ -2,11 +2,10 @@ import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import Team from "../components/Team";
 import {AllCards, CardData, GroupData} from "../data/CardData";
 import {scale, verticalScale} from 'react-native-size-matters'
-import {ProgressBar} from "react-native-paper";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
-import ExpoCheckbox from "expo-checkbox";
 import Group from "../components/Group";
+import MyProgressBar from "../components/ProgressBar";
 
 export default function AlbumScreen() {
     const cards = useRecoilValue(myCards)
@@ -16,14 +15,7 @@ export default function AlbumScreen() {
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
-                <View style={styles.progress}>
-                    <ProgressBar
-                        progress={(cards? Object.keys(cards).length : 0)/AllCards.length}
-                        color={'#269900'}
-                        style={{height: verticalScale(10)}}
-                    />
-                    <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>{cards? Object.keys(cards).length : 0}/{AllCards.length}</Text>
-                </View>
+                <MyProgressBar cards={cards}/>
                 <Team team={CardData[0]} />
                 <FlatList
                     data={GroupData}
@@ -45,7 +37,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     progress: {
-        marginTop: verticalScale(20),
+        marginTop: verticalScale(25),
         padding: scale(10),
         height: verticalScale(40),
         backgroundColor: 'rgba(52, 52, 52, 0.25)',

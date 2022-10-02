@@ -2,7 +2,7 @@ import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground, Keyboa
 import {TextInput} from "react-native-paper";
 import {useState} from "react";
 import {PhoneAuthProvider, signInWithCredential} from 'firebase/auth'
-import {useUserUpdate} from "../context/Context";
+import {useUser, useUserUpdate} from "../context/Context";
 import { updateProfile } from "firebase/auth"
 import {scale, verticalScale} from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,10 +11,21 @@ import {myCards} from "../atoms/MyCards";
 import {getDatabase, onValue, ref} from "firebase/database";
 
 export default function AuthConfirmationScreen({route}) {
+    const user = useUser()
     const setUser = useUserUpdate()
     const {verificationID, location, auth} = route.params
     const [cards, setCards] = useRecoilState(myCards)
     const [code, setCode] = useState('')
+
+    const generateSum = obj => {
+        let sum = 0
+        if(!obj)
+            return 0
+        Object.keys(obj).forEach(key => {
+            sum += obj[key]
+        })
+        return sum
+    }
 
     const confirmCode = () => {
         const credential = PhoneAuthProvider.credential(
@@ -26,12 +37,14 @@ export default function AuthConfirmationScreen({route}) {
                 const newUser = {...res.user, location: JSON.stringify(location)}
                 setUser(newUser)
                 storeUser(newUser).catch(e => console.log(e))
-                if(!Object.keys(cards).length) {
+                if(user !== newUser) {
                     const db = getDatabase();
                     const reference = ref(db, 'users');
                     onValue(reference, (snapshot) => {
+                        console.log(generateSum(cards), generateSum(res[newUser?.phoneNumber]?.cards))
                         const res = snapshot.val();
-                        setCards(res[newUser?.phoneNumber]?.cards)
+                        if (generateSum(cards) < generateSum(res[newUser?.phoneNumber]?.cards))
+                            setCards(res[newUser?.phoneNumber]?.cards)
                     })
                 }
                 updateProfile(res.user, {

@@ -51,10 +51,12 @@ export default function AuthScreen() {
 
     const sendVerification = () => {
         const phoneProvider = new PhoneAuthProvider(auth)
+        console.log(phone)
         phoneProvider.verifyPhoneNumber(phone, recaptchaVerifier?.current)
             .then(res => {
+                console.log(res)
                 navigation.navigate('ConfirmationScreen', {verificationID: res, location: location, auth: auth})
-            })
+            }).catch(e => console.log(e))
         setPhone('')
     }
 

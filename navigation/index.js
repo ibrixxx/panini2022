@@ -7,9 +7,8 @@ import {useRecoilState} from "recoil";
 import {collectorsData, myCards} from "../atoms/MyCards";
 import {getDatabase, onValue, ref, set} from "firebase/database";
 import {ImageBackground, StyleSheet, Text, View} from "react-native";
-import {ProgressBar} from "react-native-paper";
-import {AllCards} from "../data/CardData";
 import {scale, verticalScale} from "react-native-size-matters";
+import MyProgressBar from "../components/ProgressBar";
 
 const Main = () => {
     const user = useUser()
@@ -17,6 +16,16 @@ const Main = () => {
     const [cards, setCards] = useRecoilState(myCards)
     const [data, setData] = useRecoilState(collectorsData)
     const [ready, setReady] = useState(false)
+
+    const generateSum = obj => {
+        let sum = 0
+        if(!obj)
+            return 0
+        Object.keys(obj).forEach(key => {
+            sum += obj[key]
+        })
+        return sum
+    }
 
     useEffect(() => {
         (async () => {
@@ -44,7 +53,7 @@ const Main = () => {
                         // console.log("Res: " + JSON.stringify(res));
                         setData(res)
                         savedCardsOnline = user ? res[user?.phoneNumber].cards : res[usr?.phoneNumber].cards
-                        if (savedCardsOnline && savedCardsLength < Object.keys(savedCardsOnline).length) {
+                        if (savedCardsLength < Object.keys(savedCardsOnline).length || generateSum(cards) < generateSum(savedCardsOnline)) {
                             console.log('t11')
                             setCards(savedCardsOnline)
                         }
@@ -73,15 +82,7 @@ const Main = () => {
         return (
             <View style={styles.container}>
                 <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
-                    <View style={styles.progress}>
-                        <ProgressBar
-                            progress={0/AllCards.length}
-                            color={'#269900'}
-                            style={{height: verticalScale(10)}}
-                            indeterminate={true}
-                        />
-                        <Text style={{color: 'white', fontStyle: 'italic', position: 'absolute', top: verticalScale(20), right: scale(10)}}>0/{AllCards.length}</Text>
-                    </View>
+                    <MyProgressBar cards={cards}/>
                 </ImageBackground>
             </View>
         )
