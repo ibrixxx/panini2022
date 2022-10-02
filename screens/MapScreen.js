@@ -19,14 +19,14 @@ export default function MapScreen() {
         let temp = {}
         Object.keys(data).forEach(key => {
             let tempData = {}
-            Object.keys(data[key].cards).forEach(card => {
-                if(!(card in cards) && data[key].cards[card] > 1) {
-                    tempData[card] = data[key].cards[card]
+            Object.keys(data[key]?.cards).forEach(card => {
+                if(!(card in cards) && data[key]?.cards[card] && data[key]?.cards[card] > 1) {
+                    tempData[card] = data[key]?.cards[card]
                 }
             })
             temp[key] = {
                 cards: tempData,
-                location: data[key].location
+                location: data[key]?.location
             }
         })
         setMapCards(temp)
@@ -58,27 +58,27 @@ export default function MapScreen() {
                 style={styles.map}
                 mapType={'mutedStandard'}
                 initialRegion={{
-                    latitude: JSON.parse(user.photoURL?? user.location)?.lat?? 20.2,
-                    longitude: JSON.parse(user.photoURL?? user.location)?.lng?? 14.3,
+                    latitude: JSON.parse(user.location?? user.photoURL)?.lat?? 20.2,
+                    longitude: JSON.parse(user.location?? user.photoURL)?.lng?? 14.3,
                     latitudeDelta: 0.51,
                     longitudeDelta: 0.51,
                 }}
             >
                 {
-                    Object.keys(mapCards).map(item => {
-                        if(mapCards[item].location && item !== user.phoneNumber && item !== undefined)
+                    Object.keys(mapCards)?.map(item => {
+                        if(mapCards[item]?.location && item !== user?.phoneNumber && item !== undefined)
                             return (
                                 <Marker
                                     key={item+'marker'}
                                     coordinate={{
-                                        latitude: parseFloat(mapCards[item].location.lat),
-                                        longitude: parseFloat(mapCards[item].location.lng),
+                                        latitude: parseFloat(mapCards[item]?.location?.lat),
+                                        longitude: parseFloat(mapCards[item]?.location?.lng),
                                     }}
-                                    title={'Ima, a ti ne: ' + Object.keys(mapCards[item].cards).length.toString()}
+                                    title={'Ima, a ti ne: ' + Object.keys(mapCards[item]?.cards)?.length?.toString()}
                                     description={item}
                                     onCalloutPress={() => onCalloutPress(item)}
                                 >
-                                    {renderMarker(Object.keys(mapCards[item].cards).length.toString())}
+                                    {renderMarker(Object.keys(mapCards[item]?.cards)?.length?.toString())}
                                 </Marker>
                             )
                     })

@@ -25,7 +25,12 @@
         "foregroundImage": "./assets/appIcon.png",
         "backgroundColor": "#DAA520"
       },
-      "package": "com.ibrahimmesan.panini"
+      "package": "com.ibrahimmesan.panini",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDRkOujZCISyQUKkQNUOsGtTFMjNbK7YLE"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

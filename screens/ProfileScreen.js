@@ -46,6 +46,7 @@ export default function ProfileScreen() {
 
     const logOut = async () => {
         await AsyncStorage.removeItem('user')
+        await AsyncStorage.removeItem('cards')
         updateUser(null)
     }
 

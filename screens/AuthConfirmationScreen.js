@@ -7,7 +7,7 @@ import { updateProfile } from "firebase/auth"
 import {scale, verticalScale} from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useRecoilState} from "recoil";
-import {myCards} from "../atoms/MyCards";
+import {collectorsData, myCards} from "../atoms/MyCards";
 import {getDatabase, onValue, ref} from "firebase/database";
 
 export default function AuthConfirmationScreen({route}) {
@@ -15,6 +15,7 @@ export default function AuthConfirmationScreen({route}) {
     const setUser = useUserUpdate()
     const {verificationID, location, auth} = route.params
     const [cards, setCards] = useRecoilState(myCards)
+    const [data, setData] = useRecoilState(collectorsData)
     const [code, setCode] = useState('')
 
     const generateSum = obj => {
@@ -35,14 +36,15 @@ export default function AuthConfirmationScreen({route}) {
         signInWithCredential(auth, credential)
             .then(res => {
                 const newUser = {...res.user, location: JSON.stringify(location)}
-                setUser(newUser)
-                storeUser(newUser).catch(e => console.log(e))
                 if(user !== newUser) {
+                    setUser(newUser)
+                    storeUser(newUser).catch(e => console.log(e))
                     const db = getDatabase();
                     const reference = ref(db, 'users');
                     onValue(reference, (snapshot) => {
-                        console.log(generateSum(cards), generateSum(res[newUser?.phoneNumber]?.cards))
                         const res = snapshot.val();
+                        if(!Object.keys(data).length)
+                            setData(res)
                         if (generateSum(cards) < generateSum(res[newUser?.phoneNumber]?.cards))
                             setCards(res[newUser?.phoneNumber]?.cards)
                     })
