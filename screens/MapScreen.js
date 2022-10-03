@@ -56,7 +56,7 @@ export default function MapScreen() {
         <View style={styles.container}>
             <MapView
                 style={styles.map}
-                mapType={'mutedStandard'}
+                mapType={'standard'}
                 initialRegion={{
                     latitude: JSON.parse(user.location?? user.photoURL)?.lat?? 20.2,
                     longitude: JSON.parse(user.location?? user.photoURL)?.lng?? 14.3,
