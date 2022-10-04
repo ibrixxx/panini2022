@@ -1,8 +1,7 @@
 import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import Team from "../components/Team";
-import {AllCards, CardData} from "../data/CardData";
+import {CardData} from "../data/CardData";
 import {scale, verticalScale} from 'react-native-size-matters'
-import {ProgressBar} from "react-native-paper";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 import MyProgressBar from "../components/ProgressBar";

@@ -52,12 +52,13 @@ const Main = () => {
                         const res = snapshot.val();
                         // console.log("Res: " + JSON.stringify(res));
                         setData(res)
+                        AsyncStorage.setItem('data', JSON.stringify(res))
                         savedCardsOnline = user ? res[user?.phoneNumber].cards : res[usr?.phoneNumber].cards
-                        if (savedCardsLength < Object.keys(savedCardsOnline).length || generateSum(cards) < generateSum(savedCardsOnline)) {
+                        if ((cards && !Object.keys(cards).length) && (savedCardsLength < Object.keys(savedCardsOnline).length || generateSum(cards) < generateSum(savedCardsOnline))) {
                             console.log('t11')
                             setCards(savedCardsOnline)
                         }
-                        if (savedCardsLength > Object.keys(savedCardsOnline).length) {
+                        if (cards && Object.keys(cards)?.length > Object.keys(savedCardsOnline).length) {
                             console.log('t2')
                             const reference = ref(db, 'users/' + usr?.phoneNumber ?? user?.phoneNumber);
                             set(reference, {

@@ -43,8 +43,10 @@ export default function AuthConfirmationScreen({route}) {
                     const reference = ref(db, 'users');
                     onValue(reference, (snapshot) => {
                         const res = snapshot.val();
-                        if(!Object.keys(data).length)
+                        if(!Object.keys(data).length) {
                             setData(res)
+                            AsyncStorage.setItem('data', JSON.stringify(res)).catch(e => console.log(e))
+                        }
                         if (generateSum(cards) < generateSum(res[newUser?.phoneNumber]?.cards))
                             setCards(res[newUser?.phoneNumber]?.cards)
                     })
@@ -91,7 +93,7 @@ export default function AuthConfirmationScreen({route}) {
                     style={styles.button}
                 >
                     <Text style={{color: 'gold', fontWeight: 'bold'}}>
-                        POTVRDI
+                        CONFIRM
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>

@@ -12,6 +12,7 @@ import {scale, verticalScale} from "react-native-size-matters";
 import * as Location from 'expo-location';
 import ExpoCheckbox from "expo-checkbox";
 import {getApp} from "firebase/app";
+import CountryPicker, { DARK_THEME } from 'react-native-country-picker-modal'
 
 const app = getApp();
 const auth = getAuth(app);
@@ -19,6 +20,7 @@ const auth = getAuth(app);
 export default function AuthScreen() {
     const navigation = useNavigation()
     const [phone, setPhone] = useState('')
+    const [phoneCode, setPhoneCode] = useState({country: 'BA', code: '387'})
     const [location, setLocation] = useState(null);
     const [checked, setChecked] = useState(location !== null)
     const recaptchaVerifier = useRef(null)
@@ -32,13 +34,13 @@ export default function AuthScreen() {
         if(!val){
             setLocation(null)
             setChecked(false)
-            const message = 'Odbili ste dati pristup lokaciji, drugi kolekcionari Vas nece vidjeti.'
+            const message = 'You need to enable the app to use your current location to use it.'
             Alert.alert(message)
             return
         }
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            const message = 'Odbili ste dati pristup lokaciji, ncece vas moci naci drugi kolekcionari preko aplikacije.'
+            const message = 'You need to enable the app to use your current location to use it.'
             Alert.alert(message)
             return;
         }
@@ -51,8 +53,10 @@ export default function AuthScreen() {
 
     const sendVerification = () => {
         const phoneProvider = new PhoneAuthProvider(auth)
-        console.log(phone)
-        phoneProvider.verifyPhoneNumber(phone, recaptchaVerifier?.current)
+        const parsedPhone = phone[0] === '0'? phone.substring(1, phone.length):phone
+        const phoneNumber = '+' + phoneCode.code + parsedPhone
+        console.log(phoneNumber)
+        phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier?.current)
             .then(res => {
                 console.log(res)
                 navigation.navigate('ConfirmationScreen', {verificationID: res, location: location, auth: auth})
@@ -68,9 +72,17 @@ export default function AuthScreen() {
                     ref={recaptchaVerifier}
                     firebaseConfig={firebaseConfig}
                 />
-                <View>
+                <View style={{flexDirection: 'row', marginBottom: verticalScale(10), alignItems: 'center', justifyContent: 'center'}}>
+                    <CountryPicker
+                        countryCode={phoneCode.country}
+                        withCallingCode
+                        withCallingCodeButton
+                        onSelect={country => setPhoneCode({country: country.cca2, code: country.callingCode[0]})}
+                        theme={DARK_THEME}
+                        containerButtonStyle={{flex: 1, color: 'white', paddingHorizontal: scale(10), alignItems: 'center', justifyContent: 'center'}}
+                    />
                     <TextInput
-                        placeholder={'+3876* *** ***'}
+                        placeholder={'6* *** ***'}
                         onChangeText={setPhone}
                         keyboardType={'phone-pad'}
                         autoCompleteType={'tel'}
@@ -134,7 +146,7 @@ export default function AuthScreen() {
                     {/*/>*/}
                 </View>
                 <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between', margin: verticalScale(10)}}>
-                    <Text style={{color: 'white', fontStyle: 'italic'}}>Dopusti aplikaciji pristup Vašoj lokaciji.</Text>
+                    <Text style={{color: 'white', fontStyle: 'italic'}}>Let the app use your current location.</Text>
                     <ExpoCheckbox
                         value={checked}
                         color={checked ? '#4630EB' : undefined}
@@ -148,7 +160,7 @@ export default function AuthScreen() {
                     onPress={sendVerification}
                 >
                     <Text style={{color: 'gold', fontWeight: 'bold'}}>
-                        Pošalji SMS kod
+                        Send SMS code
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>
@@ -168,10 +180,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(20)
     },
     input: {
+        flex: 5,
         borderRadius: scale(12),
-        marginBottom: verticalScale(10),
         backgroundColor: 'black',
-        color: 'white'
+        color: 'white',
     },
     button: {
         backgroundColor: 'rgba(153, 0, 51, 0.5)',

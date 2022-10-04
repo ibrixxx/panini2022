@@ -64,7 +64,7 @@ export default function ProfileScreen() {
                 </View>
                 <Pressable style={styles.location}>
                     <MaterialIcons name="location-on" size={24} color="white" />
-                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 17, marginLeft: scale(10)}}>{location}</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 17, marginLeft: scale(10)}}>{location?? JSON.parse(user.location)?.lat + ' ' + JSON.parse(user.location)?.lng}</Text>
                 </Pressable>
                 <View style={styles.data}>
                     <View style={{marginRight: scale(10), alignItems: 'center'}}>
@@ -82,7 +82,7 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>sakupljeno</Text>
+                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>collected</Text>
                     </View>
                     <View style={{marginLeft: scale(10), alignItems: 'center'}}>
                         <AnimatedCircularProgress
@@ -99,7 +99,7 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>duplikati</Text>
+                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>duplicates</Text>
                     </View>
                 </View>
             </ImageBackground>

@@ -24,14 +24,21 @@ export default function DuplicateCards({route}) {
                 </View>
                 <View style={{flexDirection: 'row'}}>
                     <View style={styles.data}>
-                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Ima</Caption>
+                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Has</Caption>
                         <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
                     </View>
                     <View style={styles.data}>
-                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Nema, a Vi imate</Caption>
+                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Cards that you have</Caption>
                         <Title style={{color: 'white'}}>{number}</Title>
                     </View>
                 </View>
+                {
+                    Object.keys(data.cards).length &&
+                    <View style={styles.listItem2}>
+                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Duplicate cards that you don't have in tha album:</Caption>
+                        <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
+                    </View>
+                }
                 <FlatList
                     data={Object.keys(data.cards)}
                     renderItem={renderItem}
@@ -78,6 +85,17 @@ const styles = StyleSheet.create({
     },
     listItem: {
         flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: scale(4),
+        paddingHorizontal: scale(10),
+        backgroundColor: 'rgba(52, 52, 52, 0.2)',
+    },
+    listItem2: {
+        width: '100%',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
