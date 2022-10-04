@@ -82,7 +82,7 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>collected</Text>
+                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>collected</Text>
                     </View>
                     <View style={{marginLeft: scale(10), alignItems: 'center'}}>
                         <AnimatedCircularProgress
@@ -99,7 +99,7 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic'}}>duplicates</Text>
+                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>duplicates</Text>
                     </View>
                 </View>
             </ImageBackground>

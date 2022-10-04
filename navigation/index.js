@@ -48,18 +48,18 @@ const Main = () => {
                 if(usr || user) {
                     const db = getDatabase();
                     const reference = await ref(db, 'users');
-                    await onValue(reference, (snapshot) => {
+                    await onValue(reference, async (snapshot) => {
                         const res = snapshot.val();
                         // console.log("Res: " + JSON.stringify(res));
                         setData(res)
-                        AsyncStorage.setItem('data', JSON.stringify(res))
+                        await AsyncStorage.setItem('data', JSON.stringify(res))
                         savedCardsOnline = user ? res[user?.phoneNumber].cards : res[usr?.phoneNumber].cards
-                        if ((cards && !Object.keys(cards).length) && (savedCardsLength < Object.keys(savedCardsOnline).length || generateSum(cards) < generateSum(savedCardsOnline))) {
-                            console.log('t11')
-                            setCards(savedCardsOnline)
+                        const savedCardsAsync = await AsyncStorage.getItem('cards')
+                        if (generateSum(JSON.parse(savedCardsAsync)) < generateSum(savedCardsOnline)) {
+                            setCards(prev => savedCardsOnline)
                         }
-                        if (cards && Object.keys(cards)?.length > Object.keys(savedCardsOnline).length) {
-                            console.log('t2')
+                        if (generateSum(JSON.parse(savedCardsAsync)) > generateSum(savedCardsOnline)) {
+                            // console.log('t2')
                             const reference = ref(db, 'users/' + usr?.phoneNumber ?? user?.phoneNumber);
                             set(reference, {
                                 cards: JSON.parse(jsonValue),
