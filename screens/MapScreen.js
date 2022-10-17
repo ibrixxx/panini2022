@@ -1,5 +1,5 @@
 import {StyleSheet, View, Dimensions, ImageBackground} from 'react-native';
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {useUser} from "../context/Context";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {collectorsData, myCards} from "../atoms/MyCards";
@@ -76,6 +76,7 @@ export default function MapScreen() {
     return (
         <View style={styles.container}>
             <MapView
+                provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 mapType={'standard'}
                 initialRegion={{
