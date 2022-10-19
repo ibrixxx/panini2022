@@ -4,7 +4,7 @@
     "slug": "panini",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appIcon2.png",
+    "icon": "./assets/iosAppIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splashWC.png",
