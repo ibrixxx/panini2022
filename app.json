@@ -22,7 +22,8 @@
       "bundleIdentifier": "com.ibrahimmesan.panini",
       "config": {
         "googleMapsApiKey": "AIzaSyDMiMSdWy-O6_RHxxgOVZRJ4hPDsFhsd24"
-      }
+      },
+      "icon": "./assets/iosAppIcon.png"
     },
     "android": {
       "adaptiveIcon": {

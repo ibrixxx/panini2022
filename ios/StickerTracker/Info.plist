@@ -51,11 +51,11 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your location so other collectors can find you</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location</string>
+	<string>Allow $(PRODUCT_NAME) to access your location so other collectors near by can see you</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Enable location to see other collector and their cards near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location</string>
+	<string>Allow $(PRODUCT_NAME) to access your location so other collectors near by can see you</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
