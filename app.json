@@ -4,7 +4,7 @@
     "slug": "panini",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/iosAppIcon.png",
+    "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splashWC.png",
@@ -23,11 +23,11 @@
       "config": {
         "googleMapsApiKey": "AIzaSyDMiMSdWy-O6_RHxxgOVZRJ4hPDsFhsd24"
       },
-      "icon": "./assets/iosAppIcon.png"
+      "icon": "./assets/appIcon.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/appIcon2.png",
+        "foregroundImage": "./assets/appIcon.png",
         "backgroundColor": "#DAA520"
       },
       "package": "com.ibrahimmesan.panini",

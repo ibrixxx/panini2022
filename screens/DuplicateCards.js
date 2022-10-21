@@ -28,14 +28,14 @@ export default function DuplicateCards({route}) {
                         <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
                     </View>
                     <View style={styles.data}>
-                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Cards that you have</Caption>
+                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Your duplicates</Caption>
                         <Title style={{color: 'white'}}>{number}</Title>
                     </View>
                 </View>
                 {
-                    Object.keys(data.cards).length &&
+                    Object.keys(data.cards).length > 0 &&
                     <View style={styles.listItem2}>
-                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Duplicate cards that you don't have in tha album:</Caption>
+                        <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Duplicate cards you don't have:</Caption>
                         <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
                     </View>
                 }
@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         padding: scale(4),
         paddingHorizontal: scale(10),
-        backgroundColor: 'rgba(52, 52, 52, 0.2)',
+        backgroundColor: 'rgba(52, 52, 52, 0.55)',
     }
 });
