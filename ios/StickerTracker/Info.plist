@@ -53,7 +53,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location</string>
+	<string>Allow $(PRODUCT_NAME) to access your location to interact with other collectors on the map</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
