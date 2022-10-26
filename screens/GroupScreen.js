@@ -9,24 +9,27 @@ import MyProgressBar from "../components/ProgressBar";
 export default function GroupScreen({route}) {
     const {group} = route.params
     const cards = useRecoilValue(myCards)
+
     const getData = () => {
         switch (group) {
-            case 'A':
+            case 'Group A':
                 return CardData.slice(1, 5)
-            case 'B':
+            case 'Group B':
                 return CardData.slice(5, 9)
-            case 'C':
+            case 'Group C':
                 return CardData.slice(9, 13)
-            case 'D':
+            case 'Group D':
                 return CardData.slice(13, 17)
-            case 'E':
+            case 'Group E':
                 return CardData.slice(17, 21)
-            case 'F':
+            case 'Group F':
                 return CardData.slice(21, 25)
-            case 'G':
+            case 'Group G':
                 return CardData.slice(25, 29)
-            case 'H':
+            case 'Group H':
                 return CardData.slice(29, 33)
+            default:
+                return CardData.slice(0, 1)
         }
     }
 

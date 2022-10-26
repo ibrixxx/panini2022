@@ -1,7 +1,7 @@
-import {StyleSheet, View, ImageBackground, Text, Pressable} from 'react-native';
+import {StyleSheet, View, ImageBackground, Text, Pressable, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useState} from "react";
-import {Feather, Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {Feather, MaterialIcons} from "@expo/vector-icons";
 import {scale, verticalScale} from "react-native-size-matters";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
@@ -11,12 +11,15 @@ import {useUser, useUserUpdate} from "../context/Context";
 import Geocoder from 'react-native-geocoding';
 import { GOOGLE_API_KEY } from '@env';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {ref, set, getDatabase} from "firebase/database";
+import AddBanner from "../components/AddBanner";
 
 Geocoder.init(GOOGLE_API_KEY)
 
 export default function ProfileScreen() {
     const cards = useRecoilValue(myCards)
     const user = useUser()
+    const db = getDatabase()
     const updateUser = useUserUpdate()
     const [myAlbumCards, setMyCards] = useState(0)
     const [duplicates, setDuplicates] = useState(0)
@@ -48,6 +51,14 @@ export default function ProfileScreen() {
         await AsyncStorage.removeItem('user')
         await AsyncStorage.removeItem('cards')
         updateUser(null)
+    }
+
+    const deleteAccount = () => {
+        const reference = ref(db, 'users/' + user.phoneNumber);
+        set(reference, {
+            cards: {},
+        }).catch(e => console.log(e));
+        logOut().catch(e => console.log(e))
     }
 
     return (
@@ -102,7 +113,13 @@ export default function ProfileScreen() {
                         <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>duplicates</Text>
                     </View>
                 </View>
+                <TouchableOpacity onPress={deleteAccount} style={styles.del}>
+                    <Text style={{color: 'firebrick', fontWeight: 'bold'}}>
+                        Delete account
+                    </Text>
+                </TouchableOpacity>
             </ImageBackground>
+            <AddBanner />
         </View>
     );
 }
@@ -116,7 +133,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: verticalScale(150),
+        paddingVertical: verticalScale(100),
         paddingHorizontal: scale(40)
     },
     location: {
@@ -143,6 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderWidth: 1,
         borderColor: 'gray',
+        marginBottom: verticalScale(10)
     },
     phone: {
         flex: 1,
@@ -175,5 +193,18 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         marginLeft: scale(2),
         height: '100%',
+    },
+    del: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.5)',
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: 'red',
+        marginLeft: scale(2),
+        height: '100%',
+        width: '100%'
     }
 });

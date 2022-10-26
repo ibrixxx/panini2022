@@ -11,6 +11,7 @@ import { getDatabase, ref, set } from 'firebase/database';
 
 function Team({team}) {
     const user = useUser()
+    const db = getDatabase()
     const [cards, setCards] = useRecoilState(myCards)
     const [checked, setChecked] = useState(() => {
         const limit = team.tag === 'FWC'? 30:19
@@ -34,7 +35,6 @@ function Team({team}) {
     }
 
     const storeDataToDatabase = obj => {
-        const db = getDatabase();
         const reference = ref(db, 'users/' + user.phoneNumber);
         set(reference, {
             cards: obj,

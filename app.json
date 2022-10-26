@@ -7,7 +7,7 @@
     "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/background.jpeg",
       "resizeMode": "cover",
       "backgroundColor": "#DAA520"
     },
@@ -44,5 +44,9 @@
     "plugins": [
       "expo-build-properties"
     ]
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7256580607526987~7423819246",
+    "ios_app_id": "ca-app-pub-7256580607526987~9502708740"
   }
 }

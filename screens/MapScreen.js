@@ -8,6 +8,7 @@ import { Avatar } from 'react-native-paper';
 import {useEffect, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddBanner from "../components/AddBanner";
 
 export default function MapScreen() {
     const user = useUser()

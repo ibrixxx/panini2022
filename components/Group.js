@@ -10,7 +10,7 @@ export default function Group({item}) {
         <TouchableOpacity onPress={() => navigation.navigate('GroupScreen', {group: item.name})} style={styles.container}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={styles.name}>Group {item.name}</Text>
+                    <Text style={styles.name}>{item.name}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     {item.flags.map(flag => <Text key={flag} style={styles.flag}>{flag}</Text>)}
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         margin: 5,
         padding: 4,
         marginHorizontal: 10,
+        paddingHorizontal: scale(5)
     },
     image: {
         flex: 1,

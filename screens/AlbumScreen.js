@@ -6,6 +6,7 @@ import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
 import Group from "../components/Group";
 import MyProgressBar from "../components/ProgressBar";
+import AddBanner from "../components/AddBanner";
 
 export default function AlbumScreen() {
     const cards = useRecoilValue(myCards)
@@ -16,13 +17,13 @@ export default function AlbumScreen() {
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
                 <MyProgressBar cards={cards}/>
-                <Team team={CardData[0]} />
                 <FlatList
                     data={GroupData}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item.name + index}
                 />
             </ImageBackground>
+            <AddBanner />
         </View>
     );
 }
