@@ -6,11 +6,13 @@ import {Caption, Title} from "react-native-paper";
 export default function DuplicateCards({route}) {
     const {data, phone, number} = route.params
 
+    const getListData = () =>  Object.keys(data.cards)?? []
+
     const renderItem = ({item}) => {
         return (
             <View style={styles.listItem}>
                 <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>{item}</Caption>
-                <Title style={{color: 'white'}}>{data.cards[item]-1}x</Title>
+                <Title style={{color: 'white'}}>{data.cards[item]? data.cards[item]-1:''}x</Title>
             </View>
         )
     }
@@ -25,7 +27,7 @@ export default function DuplicateCards({route}) {
                 <View style={{flexDirection: 'row'}}>
                     <View style={styles.data}>
                         <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Has</Caption>
-                        <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
+                        <Title style={{color: 'white'}}>{Object.keys(data.cards)?.length?? 0}</Title>
                     </View>
                     <View style={styles.data}>
                         <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Your duplicates</Caption>
@@ -33,14 +35,14 @@ export default function DuplicateCards({route}) {
                     </View>
                 </View>
                 {
-                    Object.keys(data.cards).length > 0 &&
+                    Object.keys(data.cards)?.length > 0 &&
                     <View style={styles.listItem2}>
                         <Caption style={{color: 'whitesmoke', fontStyle: 'italic'}}>Duplicate cards you don't have:</Caption>
                         <Title style={{color: 'white'}}>{Object.keys(data.cards).length}</Title>
                     </View>
                 }
                 <FlatList
-                    data={Object.keys(data.cards)}
+                    data={getListData()}
                     renderItem={renderItem}
                     keyExtractor={item => item}
                     style={{width: '100%'}}

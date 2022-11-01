@@ -1,5 +1,5 @@
 import {StyleSheet, View, Dimensions, ImageBackground} from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, {Callout, Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {useUser} from "../context/Context";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {collectorsData, myCards} from "../atoms/MyCards";
@@ -8,7 +8,7 @@ import { Avatar } from 'react-native-paper';
 import {useEffect, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AddBanner from "../components/AddBanner";
+import MyCallout from "../components/Callout";
 
 export default function MapScreen() {
     const user = useUser()
@@ -20,18 +20,19 @@ export default function MapScreen() {
     useEffect(() => {
         (async () => {
             let temp = {}
-            if (!Object.keys(data).length) {
+            if (!Object.keys(data)?.length) {
                 const cData = await AsyncStorage.getItem('data').catch(e => console.log(e))
                 setData(JSON.parse(cData))
             }
             let locationPositions = {}
             Object.keys(data).forEach(key => {
                 let tempData = {}
-                Object.keys(data[key]?.cards).forEach(card => {
-                    if (!(card in cards) && data[key]?.cards[card] && data[key]?.cards[card] > 1) {
-                        tempData[card] = data[key]?.cards[card]
-                    }
-                })
+                if(data[key]?.cards)
+                    Object.keys(data[key]?.cards)?.forEach(card => {
+                        if (!(card in cards) && data[key]?.cards[card] && data[key]?.cards[card] > 1) {
+                            tempData[card] = data[key]?.cards[card]
+                        }
+                    })
                 const currLocation = (data[key]?.location.lat + data[key]?.location.lng).toFixed(4)
                 if(!(currLocation.toString() in locationPositions)) {
                     locationPositions[currLocation.toString()] = 1
@@ -67,7 +68,7 @@ export default function MapScreen() {
     const onCalloutPress = item => {
         let number = 0
         Object.keys(cards).forEach(card => {
-            if(!(card in data[item].cards) && cards[card] > 1) {
+            if(data[item]?.cards && !(card in data[item]?.cards) && cards[card] > 1) {
                 number++
             }
         })
@@ -99,11 +100,12 @@ export default function MapScreen() {
                                         latitude: parseFloat(mapCards[item]?.location?.lat),
                                         longitude: parseFloat(mapCards[item]?.location?.lng),
                                     }}
-                                    title={message}
-                                    description={item}
                                     onCalloutPress={() => onCalloutPress(item)}
                                 >
                                     {renderMarker(Object.keys(mapCards[item]?.cards)?.length?.toString())}
+                                    <Callout style={{ flex: 1, position: 'relative', backgroundColor: 'transparent'}} onPress={() => onCalloutPress(item)}>
+                                        <MyCallout phone={item} message={message}/>
+                                    </Callout>
                                 </Marker>
                             )
                         }

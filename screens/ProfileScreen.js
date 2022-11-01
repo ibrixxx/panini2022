@@ -1,11 +1,11 @@
 import {StyleSheet, View, ImageBackground, Text, Pressable, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useState} from "react";
-import {Feather, MaterialIcons} from "@expo/vector-icons";
+import {Feather, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import {scale, verticalScale} from "react-native-size-matters";
 import {useRecoilValue} from "recoil";
 import {myCards} from "../atoms/MyCards";
-import {useFocusEffect} from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import {AllCards} from "../data/CardData";
 import {useUser, useUserUpdate} from "../context/Context";
 import Geocoder from 'react-native-geocoding';
@@ -20,6 +20,7 @@ export default function ProfileScreen() {
     const cards = useRecoilValue(myCards)
     const user = useUser()
     const db = getDatabase()
+    const navigation = useNavigation()
     const updateUser = useUserUpdate()
     const [myAlbumCards, setMyCards] = useState(0)
     const [duplicates, setDuplicates] = useState(0)
@@ -61,6 +62,24 @@ export default function ProfileScreen() {
         logOut().catch(e => console.log(e))
     }
 
+    const onMyCardsPress = () => {
+        let dataCards = []
+        AllCards.forEach(c => {
+            if(!cards[c])
+                dataCards.push(c)
+        })
+        navigation.navigate('Cards', {data: dataCards, title: 'Missing'})
+    }
+
+    const onDuplicatesPress = () => {
+        let dataCards = []
+        Object.keys(cards).forEach(c => {
+            if(cards[c] > 1)
+                dataCards.push(c)
+        })
+        navigation.navigate('Cards', {data: dataCards, title: 'Duplicates', duplicates: duplicates})
+    }
+
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../assets/background.jpeg')} resizeMode="cover" style={styles.image}>
@@ -78,7 +97,7 @@ export default function ProfileScreen() {
                     <Text style={{color: 'white', fontWeight: 'bold', fontSize: 17, marginLeft: scale(10)}}>{location?? JSON.parse(user.location)?.lat + ' ' + JSON.parse(user.location)?.lng}</Text>
                 </Pressable>
                 <View style={styles.data}>
-                    <View style={{marginRight: scale(10), alignItems: 'center'}}>
+                    <TouchableOpacity onPress={onMyCardsPress} style={{marginRight: scale(10), alignItems: 'center'}}>
                         <AnimatedCircularProgress
                             size={100}
                             width={14}
@@ -93,9 +112,10 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>collected</Text>
-                    </View>
-                    <View style={{marginLeft: scale(10), alignItems: 'center'}}>
+                        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>collected</Text>
+                    </TouchableOpacity>
+                    <MaterialCommunityIcons name="gesture-double-tap" size={19} color="whitesmoke" />
+                    <TouchableOpacity onPress={onDuplicatesPress} style={{marginLeft: scale(10), alignItems: 'center'}}>
                         <AnimatedCircularProgress
                             size={100}
                             width={14}
@@ -110,8 +130,8 @@ export default function ProfileScreen() {
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <Text style={{color: 'white', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>duplicates</Text>
-                    </View>
+                        <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14, fontStyle: 'italic', marginTop: verticalScale(5)}}>duplicates</Text>
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={deleteAccount} style={styles.del}>
                     <Text style={{color: 'firebrick', fontWeight: 'bold'}}>

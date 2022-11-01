@@ -4,10 +4,10 @@
     "slug": "panini",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appIcon.png",
+    "icon": "./assets/NEWappIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/background.jpeg",
+      "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#DAA520"
     },
@@ -21,20 +21,22 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ibrahimmesan.panini",
       "config": {
-        "googleMapsApiKey": "AIzaSyDMiMSdWy-O6_RHxxgOVZRJ4hPDsFhsd24"
+        "googleMapsApiKey": "AIzaSyDMiMSdWy-O6_RHxxgOVZRJ4hPDsFhsd24",
+        "googleMobileAdsAppId": "ca-app-pub-7256580607526987~9502708740"
       },
-      "icon": "./assets/appIcon.png"
+      "icon": "./assets/NEWappIcon.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/appIcon.png",
+        "foregroundImage": "./assets/NewAndroidAppICon.png",
         "backgroundColor": "#DAA520"
       },
       "package": "com.ibrahimmesan.panini",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDzNPFllqZyEGE_j7Be8XgSbUJCqDt0ApU"
-        }
+        },
+        "googleMobileAdsAppId": "ca-app-pub-7256580607526987~7423819246"
       },
       "versionCode": 1
     },
@@ -42,11 +44,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-build-properties"
+      "expo-build-properties",
+      [
+        "expo-ads-admob",
+        {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
+      ]
     ]
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-7256580607526987~7423819246",
-    "ios_app_id": "ca-app-pub-7256580607526987~9502708740"
   }
 }

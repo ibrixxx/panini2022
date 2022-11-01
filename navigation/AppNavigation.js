@@ -6,6 +6,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import {createStackNavigator} from "@react-navigation/stack";
 import DuplicateCards from "../screens/DuplicateCards";
 import GroupScreen from "../screens/GroupScreen";
+import MyCardsScreen from "../screens/MyCardsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -61,6 +62,30 @@ const MapStack = () => {
     )
 }
 
+const ProfileStack = () => {
+    return (
+        <Stack.Navigator
+            initialRouteName="ProfileScreen"
+            screenOptions={{
+                headerShown: false,
+                animationEnabled: true
+            }}
+        >
+            <Stack.Screen
+                name="ProfileScreen"
+                component={ProfileScreen}
+            />
+            <Stack.Screen
+                options={{
+                    presentation: 'transparentModal'
+                }}
+                name="Cards"
+                component={MyCardsScreen}
+            />
+        </Stack.Navigator>
+    )
+}
+
 const AppNavigation = () => {
     return (
         <Tab.Navigator
@@ -89,7 +114,7 @@ const AppNavigation = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={ProfileStack}
                 options={{
                     tabBarLabel: () => null,
                     tabBarIcon: ({color}) => <FontAwesome5 name="user-circle" size={24} color={color} />
