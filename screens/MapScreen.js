@@ -1,5 +1,5 @@
 import {StyleSheet, View, Dimensions, ImageBackground} from 'react-native';
-import MapView, {Callout, Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {useUser} from "../context/Context";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {collectorsData, myCards} from "../atoms/MyCards";
@@ -8,7 +8,7 @@ import { Avatar } from 'react-native-paper';
 import {useEffect, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyCallout from "../components/Callout";
+// import MyCallout from "../components/Callout";
 
 export default function MapScreen() {
     const user = useUser()
@@ -100,12 +100,14 @@ export default function MapScreen() {
                                         latitude: parseFloat(mapCards[item]?.location?.lat),
                                         longitude: parseFloat(mapCards[item]?.location?.lng),
                                     }}
+                                    title={message}
+                                    description={item}
                                     onCalloutPress={() => onCalloutPress(item)}
                                 >
                                     {renderMarker(Object.keys(mapCards[item]?.cards)?.length?.toString())}
-                                    <Callout style={{ flex: 1, position: 'relative', backgroundColor: 'transparent'}} onPress={() => onCalloutPress(item)}>
-                                        <MyCallout phone={item} message={message}/>
-                                    </Callout>
+                                    {/*<Callout style={{ flex: 1, position: 'relative', backgroundColor: 'transparent'}} onPress={() => onCalloutPress(item)}>*/}
+                                    {/*    <MyCallout phone={item} message={message}/>*/}
+                                    {/*</Callout>*/}
                                 </Marker>
                             )
                         }
