@@ -1,4 +1,14 @@
-import {Text, View, Alert, TouchableOpacity, StyleSheet, ImageBackground, Pressable, Keyboard} from "react-native";
+import {
+    Text,
+    View,
+    Alert,
+    TouchableOpacity,
+    StyleSheet,
+    ImageBackground,
+    Pressable,
+    Keyboard,
+    Platform
+} from "react-native";
 import {useEffect, useRef, useState} from "react";
 import {FirebaseRecaptchaVerifierModal} from "expo-firebase-recaptcha";
 import {firebaseConfig} from "../firebase";
@@ -13,6 +23,8 @@ import * as Location from 'expo-location';
 import ExpoCheckbox from "expo-checkbox";
 import {getApp} from "firebase/app";
 import CountryPicker, { DARK_THEME } from 'react-native-country-picker-modal'
+import {requestPermissionsAsync} from "expo-ads-admob";
+
 
 const app = getApp();
 const auth = getAuth(app);
@@ -28,6 +40,8 @@ export default function AuthScreen() {
 
     useEffect(() => {
         onLocationCheck(true).catch(e => console.log(e))
+        if(Platform.OS === 'ios')
+            requestPermissionsAsync().catch(e => console.log(e))
     }, []);
 
     const onLocationCheck = async val => {
